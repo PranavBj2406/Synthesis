@@ -4,12 +4,12 @@ import { FaArrowRight } from "react-icons/fa";
 
 export default function Header() {
   return (
-    <header className="bg-gradient-to-b from-amber-100 to-amber-50 border border-none h-24 flex items-center z-10 relative w-full">
-      <div className="flex justify-between items-center max-w-[1400px] mx-auto w-full px-4">
+    <header className="bg-gradient-to-b from-amber-200 to-amber-100 border border-none h-24 flex items-center z-10 relative w-full">
+      <div className="flex justify-between items-center max-w-[1450px] mx-auto w-full px-4">
         <div className="flex-shrink-0">
           <h1>
             <Link to="/">
-              <span className="text-4xl font-bold flex items-start ">SYNTHESIS</span>
+              <span className="font-manrope text-4xl font-bold flex items-start ">SYNTHESIS</span>
             </Link>
           </h1>
         </div>
@@ -17,7 +17,7 @@ export default function Header() {
         <nav className="flex-grow flex justify-end">
           <ul className="flex gap-8 items-center">
             <Link to="/signUp">
-              <li className="relative text-base font-medium text-black hover:text-gray-500 duration-300 hover:after:content-['•'] hover:after:absolute hover:after:bottom-[-10px] hover:after:left-1/2 hover:after:-translate-x-1/2 hover:after:text-lg hover:after:leading-none">SignUp</li>
+              <li className="relative text-base font-semibold text-black hover:text-gray-500 duration-300 hover:after:content-['•'] hover:after:absolute hover:after:bottom-[-10px] hover:after:left-1/2 hover:after:-translate-x-1/2 hover:after:text-lg hover:after:leading-none">SignUp</li>
             </Link>
             <Link>
               <li className="relative text-base font-medium text-black hover:text-gray-500 duration-300 hover:after:content-['•'] hover:after:absolute hover:after:bottom-[-10px] hover:after:left-1/2 hover:after:-translate-x-1/2 hover:after:text-lg hover:after:leading-none">About Us</li>
