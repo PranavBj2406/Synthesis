@@ -2,6 +2,7 @@ import React from "react";
 import Image1 from "../assets/Image1.png";
 import Image2 from "../assets/Image2.png";
 import Image3 from "../assets/Image3.png";
+import Image4 from "../assets/Image4.png";
 import Icon1 from "../assets/icons/icon1.png";
 import Icon2 from "../assets/icons/icon2.png";
 import Icon3 from "../assets/icons/icon3.png";
@@ -10,6 +11,7 @@ import Icon5 from "../assets/icons/icon5.png";
 import Icon6 from "../assets/icons/icon6.png";
 import Gif1 from "../assets/gif1.gif";
 import {Link} from "react-router-dom";
+
 
 export default function Landpg() {
   return (
@@ -25,7 +27,7 @@ export default function Landpg() {
         Accelerate Healthcare Innovation with Safe, Synthetic Data
       </h1>
       <div className="flex flex-row mt-4">
-        <p className="w-[41%] text-justify ">
+        <p className="w-[41%] text-justify font-medium ">
           <spam className="font-semibold text-lg">S</spam>eamlessly generate
           high-fidelity synthetic healthcare datasets spanning structured
           records like EHRs, complex medical imaging, and continuous sensor data
@@ -194,21 +196,22 @@ export default function Landpg() {
         </p>
         <img src={Gif1} alt="" className="  "></img>
 
-
         {/* generate button */}
         <Link to="/Home">
           <div className="group mt-10 ml-6">
-            <div className="border-2 border-black h-[50px] w-[140px] rounded-3xl bg-black">
-              <div className="border-2 border-black h-[50px] w-[140px] bg-gradient-to-tl from-amber-500 via-pink-400 to-red-400 rounded-3xl flex items-center justify-center relative bottom-2 right-2 group-hover:bottom-1 group-hover:right-1 transition-all duration-300 ease-in-out">
+            <div className="border-2 border-black h-[50px] w-[240px] rounded-3xl bg-black">
+              <div className="border-2 border-black h-[50px] w-[240px] bg-gradient-to-tl from-amber-500 via-pink-400 to-red-400 rounded-3xl flex items-center justify-center relative bottom-2 right-2 group-hover:bottom-1 group-hover:right-1 transition-all duration-300 ease-in-out">
                 <span className="text-white font-manrope font-semibold text-lg group-hover:text-black transition duration-300">
-                  Generate
+                  Generate Data →
                 </span>
               </div>
             </div>
           </div>
         </Link>
 
-    
+        <div className="w-full">
+          <img src={Image4} alt=''></img>
+          </div>    
 
       </div>
     </div>

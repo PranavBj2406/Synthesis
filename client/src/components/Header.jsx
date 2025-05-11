@@ -4,7 +4,7 @@ import { FaArrowRight } from "react-icons/fa";
 
 export default function Header() {
   return (
-    <header className="bg-gradient-to-b from-amber-200 to-amber-100 border border-none h-24 flex items-center z-10 relative w-full">
+    <header className="bg-gradient-to-b from-amber-200 to-amber-100 border border-none h-24 flex items-center z-10 relative w-full ">
       <div className="flex justify-between items-center max-w-[1450px] mx-auto w-full px-4">
         <div className="flex-shrink-0">
           <h1>

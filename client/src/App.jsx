@@ -12,9 +12,9 @@ export default function App() {
     <Header/>
     <Routes>
       <Route path="/" element={<Landpg/>}></Route>
-      <Route path="/" element={<Home/>}></Route>
-      <Route path="/" element={<SignIn/>}></Route>
-      <Route path="/" element={<SignUp/>}></Route>
+      <Route path="/home" element={<Home/>}></Route>
+      <Route path="/signin" element={<SignIn/>}></Route>
+      <Route path="/signup" element={<SignUp/>}></Route>
     </Routes>
     </BrowserRouter>
   )
