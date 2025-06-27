@@ -2,6 +2,7 @@ import React from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { Link } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 
 export default function SignUp() {
   return (
@@ -12,15 +13,16 @@ export default function SignUp() {
           <div className="w-full h-full  relative bg-amber-50 rounded-2xl bottom-5  right-6 border-3 border-black z-2 px-5 py-5 ">
             <p className="text-4xl font-semibold font-manrope">
               Welcome to{" "}
-              <spam className=" bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
+              <span className=" bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent">
                 Synthesis
-              </spam>
+              </span>
             </p>
             <h1 className="text-2xl font-manrope font-semibold text-gray-500 mt-3">
               Sign up
             </h1>
 
             <h1 className="mt-5 text-lg font-manrope font-semibold ">
+              
               Username
             </h1>
             <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
@@ -58,12 +60,12 @@ export default function SignUp() {
                 </button>
               </div>
 
-              <spam className="flex justify-center items-center mt-1 p-1 font-manrope font-semibold ">
+              <span className="flex justify-center items-center mt-1 p-1 font-manrope font-semibold ">
                 or
-              </spam>
+              </span>
 
               <div className="w-auto border-2 rounded-md ml-2 bg-black ">
-                <button className="w-auto p-3 h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-purple-700 relative right-2 bottom-2 flex flex-row justify-center items-center gap-3">
+                <button  className="w-auto p-3 h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-purple-700 relative right-2 bottom-2 flex flex-row justify-center items-center gap-3">
                   <FaGoogle className="scale-110" /> Sign Up with google
                 </button>
               </div>
@@ -88,7 +90,7 @@ export default function SignUp() {
 
       {/* right side container */}
       <div className="flex justify-center items-center w-1/2 z-0 bg-gradient-to-b from-amber-100 to-amber-200 ">
-        <div className="flex justify-center items-center border-none rounded-full relative bottom-5  ">
+        <div className="flex justify-center items-center border-none rounded-full relative bottom-5   ">
           <Player
             src="https://assets.lottiefiles.com/packages/lf20_kkflmtur.json"
             background="transparent"
