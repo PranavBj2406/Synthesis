@@ -21,55 +21,58 @@ export default function SignUp() {
               Sign up
             </h1>
 
-            <h1 className="mt-5 text-lg font-manrope font-semibold ">
-              
-              Username
-            </h1>
-            <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
-              <input
-                className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
-                placeholder="enter your username."
-                type="text"
-              ></input>
-            </div>
-
-            <h1 className="mt-5 text-lg font-manrope font-semibold ">Email</h1>
-            <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
-              <input
-                className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
-                placeholder="enter your email address."
-                type="text"
-              ></input>
-            </div>
-
-            <h1 className="mt-5 text-lg font-manrope font-semibold ">
-              Password
-            </h1>
-            <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
-              <input
-                className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
-                placeholder="enter password"
-                type="password"
-              ></input>
-            </div>
-
-            <div className="flex flex-row justify-start gap-6 mt-10">
-              <div className="w-1/3 border-2 rounded-md ml-2 bg-black ">
-                <button className="w-full h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-blue-500 relative right-2 bottom-2 hover:relative hover:bottom-1 hover:right-1 duration-300 ease-in-out hover:bg-blue-400">
-                  Sign Up
-                </button>
+            {/* Form starts here */}
+            <form>
+              <h1 className="mt-5 text-lg font-manrope font-semibold ">
+                Username
+              </h1>
+              <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
+                <input
+                  className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
+                  placeholder="enter your username."
+                  type="text"
+                ></input>
               </div>
 
-              <span className="flex justify-center items-center mt-1 p-1 font-manrope font-semibold ">
-                or
-              </span>
-
-              <div className="w-auto border-2 rounded-md ml-2 bg-black ">
-                <button  className="w-auto p-3 h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-purple-700 relative right-2 bottom-2 flex flex-row justify-center items-center gap-3">
-                  <FaGoogle className="scale-110" /> Sign Up with google
-                </button>
+              <h1 className="mt-5 text-lg font-manrope font-semibold ">Email</h1>
+              <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
+                <input
+                  className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
+                  placeholder="enter your email address."
+                  type="text"
+                ></input>
               </div>
-            </div>
+
+              <h1 className="mt-5 text-lg font-manrope font-semibold ">
+                Password
+              </h1>
+              <div className="h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5">
+                <input
+                  className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
+                  placeholder="enter password"
+                  type="password"
+                ></input>
+              </div>
+
+              <div className="flex flex-row justify-start gap-6 mt-10">
+                <div className="w-1/3 border-2 rounded-md ml-2 bg-black ">
+                  <button className="w-full h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-blue-500 relative right-2 bottom-2 hover:relative hover:bottom-1 hover:right-1 duration-300 ease-in-out hover:bg-blue-400">
+                    Sign Up
+                  </button>
+                </div>
+
+                <span className="flex justify-center items-center mt-1 p-1 font-manrope font-semibold ">
+                  or
+                </span>
+
+                <div className="w-auto border-2 rounded-md ml-2 bg-black ">
+                  <button  className="w-auto p-3 h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-purple-700 relative right-2 bottom-2 hover:relative hover:bottom-1 hover:right-1 duration-300 ease-in-out hover:bg-purple-600 flex flex-row justify-center items-center gap-3">
+                    <FaGoogle className="scale-110" /> Sign Up with google
+                  </button>
+                </div>
+              </div>
+            </form>
+            {/* Form ends here */}
 
             <div className="mt-5 border-t-2  " />
 

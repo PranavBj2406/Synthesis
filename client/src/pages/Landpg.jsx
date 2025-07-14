@@ -60,7 +60,7 @@ export default function Landpg() {
           <div className="w-full md:w-[59%] relative h-[400px] mt-12 md:mt-0 z-20">
             <img
               src={Image1}
-              className="w-[300px] h-[300px] rounded-2xl absolute top-[-150px] right-8 md:right-26 rotate-[30deg] hover:scale-95 duration-300 ease-in-out shadow-2xl shadow-black border-4 border-white"
+              className="w-[300px] h-[300px] rounded-2xl absolute top-[-150px] right-8 md:right-26 rotate-[30deg] hover:scale-95 duration-300 ease-in-out shadow-2xl shadow-gray border-4 border-white"
               alt="Image1"
             />
             <img
