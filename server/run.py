@@ -1,8 +1,14 @@
+#!/usr/bin/env python3
+"""
+Application entry point
+Run this file to start the Flask development server
+"""
+
 import os
 import sys
 from dotenv import load_dotenv
 
-# Add the server directory to Python path
+# Add the project root directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Load environment variables
@@ -10,24 +16,43 @@ load_dotenv()
 
 from app import create_app
 
-# Create Flask app
+# Create application instance
 app = create_app()
 
 if __name__ == '__main__':
-    print("🚀 Starting Flask development server...")
-    print(f"📊 Environment: {app.config['FLASK_ENV']}")
-    print(f"🔧 Debug mode: {app.config['DEBUG']}")
-    print(f"🌐 Server: http://{app.config['HOST']}:{app.config['PORT']}")
-    print("=" * 50)
+    # Get configuration from environment variables
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '127.0.0.1')
+    debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    
+    print("=" * 60)
+    print("🚀 SYNTHESIS SERVER STARTING")
+    print("=" * 60)
+    print(f"📍 Server URL: http://{host}:{port}")
+    print(f"🔧 Debug Mode: {debug}")
+    print(f"🗄️  Database: {app.config.get('DATABASE_NAME', 'Not configured')}")
+    print(f"🌍 Environment: {os.environ.get('ENVIRONMENT', 'development')}")
+    print("=" * 60)
+    print("📋 Available Endpoints:")
+    print("   GET  /api/health                    - Server health check")
+    print("   GET  /api/auth/health               - Auth service health")
+    print("   POST /api/auth/signup               - User registration")
+    print("   POST /api/auth/check-email          - Check email availability")
+    print("   POST /api/auth/validate-password    - Password validation")
+    print("=" * 60)
+    print("Press Ctrl+C to stop the server")
+    print("=" * 60)
     
     try:
         app.run(
-            host=app.config['HOST'],
-            port=app.config['PORT'],
-            debug=app.config['DEBUG']
+            host=host,
+            port=port,
+            debug=debug,
+            use_reloader=debug,
+            threaded=True
         )
     except KeyboardInterrupt:
         print("\n👋 Server stopped by user")
     except Exception as e:
-        print(f"❌ Error starting server: {e}")
+        print(f"❌ Server error: {str(e)}")
         sys.exit(1)

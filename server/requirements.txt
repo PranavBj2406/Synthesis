@@ -1,33 +1,13 @@
-# Server Requirements
-
 Flask==2.3.3
-Flask-PyMongo==2.3.0
-Flask-JWT-Extended==4.5.3
-Flask-Bcrypt==1.0.1
-Flask-CORS==4.0.0
-
-# Database
 pymongo==4.5.0
-
-# Security
-Werkzeug==2.3.7
-bcrypt==4.0.1
-
-# Environment and Configuration
+flask-cors==4.0.0
 python-dotenv==1.0.0
-
-# Development and Testing
-pytest==7.4.2
-pytest-flask==1.2.0
-
-# Security
-cryptography==41.0.4
-
-# Utilities
-requests==2.31.0
-
-# JWT tokens (for Phase 3)
 PyJWT==2.8.0
-
-# Input validation
-email-validator==2.0.0
+Werkzeug==2.3.7
+blinker==1.6.2
+click==8.1.7
+colorama==0.4.6
+dnspython==2.4.2
+itsdangerous==2.1.2
+Jinja2==3.1.2
+MarkupSafe==2.1.3
