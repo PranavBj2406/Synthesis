@@ -36,25 +36,28 @@ def signup():
         # Validate input data
         is_valid, errors = validate_signup_data(data)
         if not is_valid:
-            return create_validation_error_response(errors)
+            return create_validation_error_response(errors), 400
         
         # Initialize database and user model
         db = get_db()
         user_model = User(db)
         
-        # Check if user already exists
+        # Check if user already exists (email or username)
         if user_model.email_exists(data['email']):
             return create_error_response('Email already registered', 'email'), 409
         
-        # Prepare user data
+        if user_model.username_exists(data['username']):
+            return create_error_response('Username already taken', 'username'), 409
+        
+        # Prepare user data - UPDATED schema
         user_data = {
+            'username': data['username'],
             'email': data['email'],
             'password': data['password'],
-            'first_name': data['first_name'],
-            'last_name': data['last_name'],
-            'phone': data.get('phone', ''),
+            'phone': data.get('phone', ''),  # Optional field
+            # Remove other optional fields or add as needed
             'date_of_birth': data.get('date_of_birth', ''),
-            'gender': data.get('gender', ''),
+             'gender': data.get('gender', ''),
             'profile_picture': data.get('profile_picture', ''),
         }
         
@@ -65,6 +68,7 @@ def signup():
         token_payload = {
             'user_id': user_id,
             'email': data['email'],
+            'username': data['username'],
             'exp': datetime.utcnow() + timedelta(days=7)  # Token expires in 7 days
         }
         
@@ -74,15 +78,15 @@ def signup():
             algorithm='HS256'
         )
         
-        # Success response
+        # Success response - UPDATED response structure
         return jsonify({
             'success': True,
             'message': 'Account created successfully',
             'data': {
                 'user_id': user_id,
                 'email': data['email'],
-                'first_name': data['first_name'],
-                'last_name': data['last_name'],
+                'username': data['username'],
+                'phone': data.get('phone', ''),
                 'token': token
             }
         }), 201
@@ -121,6 +125,38 @@ def check_email():
         
     except Exception as e:
         current_app.logger.error(f"Email check error: {str(e)}")
+        return create_error_response('Internal server error'), 500
+
+@auth_bp.route('/check-username', methods=['POST'])
+def check_username():
+    """Check if username already exists"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'username' not in data:
+            return create_error_response('Username is required'), 400
+        
+        username = data['username'].strip().lower()
+        
+        # Validate username format
+        from app.utils.validators import validate_username
+        if not validate_username(username):
+            return create_error_response('Invalid username format', 'username'), 400
+        
+        # Check database
+        db = get_db()
+        user_model = User(db)
+        
+        exists = user_model.username_exists(username)
+        
+        return jsonify({
+            'success': True,
+            'exists': exists,
+            'message': 'Username already taken' if exists else 'Username available'
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Username check error: {str(e)}")
         return create_error_response('Internal server error'), 500
 
 @auth_bp.route('/validate-password', methods=['POST'])

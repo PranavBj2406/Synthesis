@@ -53,7 +53,7 @@ export default function SignUp() {
                   type="password"
                 ></input>
               </div>
-
+              
               <div className="flex flex-row justify-start gap-6 mt-10">
                 <div className="w-1/3 border-2 rounded-md ml-2 bg-black ">
                   <button className="w-full h-[50px] border-2 border-black rounded-md font-manrope font-bold  text-white bg-blue-500 relative right-2 bottom-2 hover:relative hover:bottom-1 hover:right-1 duration-300 ease-in-out hover:bg-blue-400">

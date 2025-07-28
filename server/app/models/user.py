@@ -26,6 +26,10 @@ class User:
         """Find user by email"""
         return self.collection.find_one({'email': email.lower()})
     
+    def find_by_username(self, username):
+        """Find user by username"""
+        return self.collection.find_one({'username': username.lower()})
+    
     def find_by_id(self, user_id):
         """Find user by ID"""
         try:
@@ -36,6 +40,10 @@ class User:
     def email_exists(self, email):
         """Check if email already exists"""
         return self.collection.find_one({'email': email.lower()}) is not None
+    
+    def username_exists(self, username):
+        """Check if username already exists"""
+        return self.collection.find_one({'username': username.lower()}) is not None
     
     def verify_password(self, user, password):
         """Verify user password"""
@@ -58,6 +66,17 @@ class User:
         """Validate email format"""
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None
+    
+    @staticmethod
+    def validate_username(username):
+        """Validate username format"""
+        if len(username.strip()) < 3 or len(username.strip()) > 20:
+            return False, "Username must be 3-20 characters long"
+        
+        if not re.match(r'^[a-zA-Z0-9_]+$', username.strip()):
+            return False, "Username can only contain letters, numbers, and underscores"
+        
+        return True, "Username is valid"
     
     @staticmethod
     def validate_password(password):

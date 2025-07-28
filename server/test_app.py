@@ -10,12 +10,10 @@ def test_signup_success():
     print("Testing successful signup...")
     
     data = {
-        "email": "test@example.com",
+        "email": "eshwar@example.com",
+        "username": "eshwar_roy",
         "password": "SecurePass123!",
-        "confirm_password": "SecurePass123!",
-        "first_name": "John",
-        "last_name": "Doe",
-        "phone": "1234567890"
+        "phone": "1234567890"  # Optional field
     }
     
     response = requests.post(f"{API_URL}/signup", json=data)
@@ -28,11 +26,24 @@ def test_signup_duplicate_email():
     print("Testing signup with duplicate email...")
     
     data = {
-        "email": "test@example.com",  # Same email as above
-        "password": "AnotherPass123!",
-        "confirm_password": "AnotherPass123!",
-        "first_name": "Jane",
-        "last_name": "Smith"
+        "email": "eshwar@example.com",  # Same email as above
+        "username": "different_user",
+        "password": "AnotherPass123!"
+    }
+    
+    response = requests.post(f"{API_URL}/signup", json=data)
+    print(f"Status Code: {response.status_code}")
+    print(f"Response: {response.json()}")
+    print("-" * 50)
+
+def test_signup_duplicate_username():
+    """Test signup with duplicate username"""
+    print("Testing signup with duplicate username...")
+    
+    data = {
+        "email": "different@example.com",
+        "username": "eshwar_roy",  # Same username as first test
+        "password": "AnotherPass123!"
     }
     
     response = requests.post(f"{API_URL}/signup", json=data)
@@ -44,12 +55,11 @@ def test_signup_validation_errors():
     """Test signup with validation errors"""
     print("Testing signup with validation errors...")
     
-    # Missing required fields
+    # Missing required fields and invalid data
     data = {
         "email": "invalid-email",
-        "password": "weak",
-        "first_name": "",
-        "last_name": "Doe"
+        "username": "ab",  # Too short
+        "password": "weak",  # Doesn't meet strength requirements
     }
     
     response = requests.post(f"{API_URL}/signup", json=data)
@@ -62,7 +72,7 @@ def test_check_email():
     print("Testing email availability check...")
     
     # Check existing email
-    data = {"email": "test@example.com"}
+    data = {"email": "eshwar@example.com"}
     response = requests.post(f"{API_URL}/check-email", json=data)
     print(f"Existing email - Status Code: {response.status_code}")
     print(f"Response: {response.json()}")
@@ -74,16 +84,34 @@ def test_check_email():
     print(f"Response: {response.json()}")
     print("-" * 50)
 
+def test_check_username():
+    """Test username availability check"""
+    print("Testing username availability check...")
+    
+    # Check existing username
+    data = {"username": "eshwar_roy"}
+    response = requests.post(f"{API_URL}/check-username", json=data)
+    print(f"Existing username - Status Code: {response.status_code}")
+    print(f"Response: {response.json()}")
+    
+    # Check new username
+    data = {"username": "new_user_123"}
+    response = requests.post(f"{API_URL}/check-username", json=data)
+    print(f"New username - Status Code: {response.status_code}")
+    print(f"Response: {response.json()}")
+    print("-" * 50)
+
 def test_password_validation():
     """Test password validation"""
     print("Testing password validation...")
     
     passwords = [
-        "weak",
-        "StrongPass123!",
-        "NoSpecialChar123",
-        "nouppercasechar123!",
-        "NOLOWERCASECHAR123!"
+        "weak",                    # Too weak
+        "StrongPass123!",         # Valid
+        "NoSpecialChar123",       # Missing special char
+        "nouppercasechar123!",    # Missing uppercase
+        "NOLOWERCASECHAR123!",    # Missing lowercase
+        "NoNumbers!"              # Missing numbers
     ]
     
     for password in passwords:
@@ -112,10 +140,12 @@ if __name__ == "__main__":
         # Test signup functionality
         test_signup_success()
         test_signup_duplicate_email()
+        test_signup_duplicate_username()
         test_signup_validation_errors()
         
         # Test utility endpoints
         test_check_email()
+        test_check_username()
         test_password_validation()
         
         print("All tests completed!")

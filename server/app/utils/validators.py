@@ -15,8 +15,8 @@ def validate_signup_data(data):
     """
     errors = {}
     
-    # Check required fields
-    required_fields = ['email', 'password', 'first_name', 'last_name']
+    # Check required fields - UPDATED to use username instead of first_name/last_name  
+    required_fields = ['email', 'password','username']
     for field in required_fields:
         if field not in data or not data[field].strip():
             errors[field] = f"{field.replace('_', ' ').title()} is required"
@@ -27,28 +27,21 @@ def validate_signup_data(data):
         if not validate_email_format(email):
             errors['email'] = "Please provide a valid email address"
     
+    # Validate username
+    if 'username' in data and data['username']:
+        if not validate_username(data['username']):
+            errors['username'] = "Username must be 3-20 characters long and contain only letters, numbers, and underscores"
+    
     # Validate password
     if 'password' in data and data['password']:
         is_valid, message = validate_password_strength(data['password'])
         if not is_valid:
             errors['password'] = message
     
-    # Validate password confirmation
-    if 'confirm_password' in data:
-        if data.get('password') != data.get('confirm_password'):
-            errors['confirm_password'] = "Passwords do not match"
+
     
-    # Validate names
-    if 'first_name' in data and data['first_name']:
-        if not validate_name(data['first_name']):
-            errors['first_name'] = "First name should only contain letters and spaces"
-    
-    if 'last_name' in data and data['last_name']:
-        if not validate_name(data['last_name']):
-            errors['last_name'] = "Last name should only contain letters and spaces"
-    
-    # Validate phone if provided
-    if 'phone' in data and data['phone']:
+    # Validate phone if provided (OPTIONAL - only validate if present)
+    if 'phone' in data and data['phone'] and data['phone'].strip():
         if not validate_phone(data['phone']):
             errors['phone'] = "Please provide a valid phone number"
     
@@ -58,6 +51,13 @@ def validate_email_format(email):
     """Validate email format"""
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
+
+def validate_username(username):
+    """Validate username format"""
+    # Username should be 3-20 characters, alphanumeric + underscores only
+    if len(username.strip()) < 3 or len(username.strip()) > 20:
+        return False
+    return re.match(r'^[a-zA-Z0-9_]+$', username.strip()) is not None
 
 def validate_password_strength(password):
     """
@@ -81,10 +81,6 @@ def validate_password_strength(password):
     
     return True, "Password is valid"
 
-def validate_name(name):
-    """Validate name format - only letters and spaces"""
-    return re.match(r'^[a-zA-Z\s]+$', name.strip()) is not None
-
 def validate_phone(phone):
     """Validate phone number format"""
     # Remove all non-digit characters
@@ -100,13 +96,15 @@ def sanitize_input(data):
             # Strip whitespace and convert email to lowercase
             if key == 'email':
                 sanitized[key] = value.strip().lower()
+            elif key == 'username':
+                sanitized[key] = value.strip().lower()  # Username to lowercase
             else:
                 sanitized[key] = value.strip()
         else:
             sanitized[key] = value
     return sanitized
 
-def create_error_response(message, field=None, status_code=400):
+def create_error_response(message, field=None):
     """Create standardized error response"""
     response = {
         'success': False,
@@ -115,12 +113,12 @@ def create_error_response(message, field=None, status_code=400):
     if field:
         response['field'] = field
     
-    return jsonify(response), status_code
+    return jsonify(response)
 
-def create_validation_error_response(errors, status_code=400):
+def create_validation_error_response(errors):
     """Create response for validation errors"""
     return jsonify({
         'success': False,
         'message': 'Validation failed',
         'errors': errors
-    }), status_code
+    })
