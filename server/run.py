@@ -6,11 +6,14 @@ Run this file to start the Flask development server
 
 import os
 import sys
+import logging
 from dotenv import load_dotenv
 
 # Add the project root directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+# Suppress PyMongo DEBUG logs
+logging.getLogger("pymongo").setLevel(logging.WARNING)
 # Load environment variables
 load_dotenv()
 
