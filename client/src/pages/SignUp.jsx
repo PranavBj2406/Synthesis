@@ -242,8 +242,37 @@ export default function SignUp() {
       </div>
 
       {/* right side container */}
-      <div className="flex justify-center items-center w-1/2 z-0 bg-gradient-to-b from-amber-100 to-amber-200 ">
-        <div className="flex justify-center items-center border-none rounded-full relative bottom-5   ">
+      <div className="flex justify-center items-center w-1/2 z-0 bg-gradient-to-b from-amber-100 to-amber-200 relative">
+        {/* Custom background shape */}
+        <svg
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0"
+          width="650"
+          height="600"
+          viewBox="0 0 650 600"
+          fill="none"
+          style={{ filter: "blur(16px)" }}
+        >
+          <defs>
+            <radialGradient id="bgGradient" cx="50%" cy="50%" r="80%">
+              <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.7" />
+              <stop offset="60%" stopColor="#f472b6" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#f87171" stopOpacity="0.3" />
+            </radialGradient>
+          </defs>
+          <path
+            d="
+              M 100 400
+              Q 180 200 350 150
+              Q 500 120 600 250
+              Q 650 350 500 500
+              Q 350 600 200 500
+              Q 80 450 100 400
+              Z
+            "
+            fill="url(#bgGradient)"
+          />
+        </svg>
+        <div className="flex justify-center items-center border-none rounded-full relative bottom-5 z-10">
           <Player
             src="https://assets.lottiefiles.com/packages/lf20_kkflmtur.json"
             background="transparent"
