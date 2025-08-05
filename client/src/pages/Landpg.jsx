@@ -18,6 +18,7 @@ export default function Landpg() {
   return (
     <div className="bg-gradient-to-b from-amber-100 via-white to-amber-200 min-h-screen mx-auto w-full px-12 relative">
       <div className="relative z-10">
+        {/*Introduction*/ }
         <h1 className="pt-10 text-5xl font-bold font-manrope bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent w-[550px]">
           Multimodal Synthetic{" "}
         </h1>
@@ -31,31 +32,14 @@ export default function Landpg() {
         <div className="relative flex flex-col md:flex-row mt-4 w-full ">
           {/* Left side (text) */}
           <p className="w-full md:w-[41%] text-justify font-medium leading-relaxed">
-            <span className="font-semibold text-lg">S</span>eamlessly generate
-            high-fidelity synthetic healthcare datasets spanning structured records
-            like EHRs, complex medical imaging, and continuous sensor data all crafted
-            to reflect real-world clinical diversity and intricacies.
-            <br />
-            <br />
-            <span className="hidden sm:inline ">
-              Designed to eliminate patient privacy risks, our platform empowers
-              researchers, developers, and healthcare innovators to train AI models,
-              validate products, and conduct clinical research in a fully compliant,
-              privacy-first environment.
-            </span>
-            <br />
-            <br />
+            <span className="font-semibold text-lg">S</span>afely unlock the power of healthcare data—without risking patient privacy. <br /><br />
+            Synthesis generates high-fidelity synthetic datasets, including EHRs, medical images, and sensor data, that mirror real-world clinical diversity.<br /><br />
             <span className="hidden sm:inline">
-              In today's data-driven healthcare ecosystem, accessing large volumes of
-              diverse, high-quality medical data is crucial — yet real patient data is
-              often limited, restricted, or sensitive.
-              <br />
-              <br />
-              This is where our Multimodal Synthetic Healthcare Data Generator becomes a
-              game-changer.
+              Our platform empowers researchers, developers, and healthcare innovators to train AI models, validate products, and conduct clinical research in a fully compliant, privacy-first environment.<br /><br />
+              Real patient data is often limited, restricted, or sensitive. Synthesis removes these barriers—giving you instant access to diverse, high-quality medical data for innovation and discovery.
             </span>
           </p>
-
+          {/*ENd of introduction*/ }
           {/* Right side (images) */}
           <div className="w-full md:w-[59%] relative h-[400px] mt-12 md:mt-0 z-20">
             <img
