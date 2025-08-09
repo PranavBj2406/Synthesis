@@ -1,26 +1,112 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-export default function SignIn() {
+import axios from "axios";
+
+const API_BASE_URL = 'http://localhost:5000';
+
+// API Service
+const apiService = {
+  async signin(loginData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+      
+      const data = await response.json();
+      return { success: response.ok, data, status: response.status };
+    } catch (error) {
+      return { 
+        success: false, 
+        data: { message: 'Network error. Please try again.' },
+        status: 0 
+      };
+    }
+  },
+
+  async fetchProfile(token) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.json();
+      return { success: response.ok, data, status: response.status };
+    } catch (error) {
+      return { 
+        success: false, 
+        data: { message: 'Failed to fetch profile' },
+        status: 0 
+      };
+    }
+  },
+
+  async logout(token) {
+    try {
+      await fetch(`${API_BASE_URL}/api/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }
+};
+
+// Toast Notification Component
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+
+  return (
+    <div className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse`}>
+      {message}
+    </div>
+  );
+};
+
+// Main SignIn Component with default export
+export default function SignIn({ onSignInSuccess }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    login: '', // Changed to match API expectation
+    password: '',
+    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
-    // Clear error when user starts typing
+    
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: '',
       }));
     }
   };
@@ -28,27 +114,64 @@ export default function SignIn() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+    if (!formData.login.trim()) {
+      newErrors.login = 'Email or username is required';
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
-      // Handle successful form submission
-      console.log("Sign in data:", formData);
-      // Add your sign-in logic here
+      setLoading(true);
+      setErrors({});
+      
+      const result = await apiService.signin({
+        login: formData.login.trim(),
+        password: formData.password,
+      });
+
+      if (result.success && result.data.success) {
+        const { token, ...userData } = result.data.data;
+        
+        // Store auth data
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        // Set up API headers for future requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        setToast({ message: 'Login successful!', type: 'success' });
+        
+        // Handle success - either use callback or navigate directly
+        if (onSignInSuccess) {
+          setTimeout(() => {
+            onSignInSuccess(userData, token);
+          }, 1000);
+        } else {
+          // Default behavior: navigate to dashboard
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1000);
+        }
+      } else {
+        const errorMessage = result.data?.message || 'Login failed. Please try again.';
+        setToast({ message: errorMessage, type: 'error' });
+        
+        if (result.status === 401) {
+          setErrors({ login: 'Invalid credentials' });
+        }
+      }
+      setLoading(false);
     } else {
       setErrors(newErrors);
     }
@@ -56,8 +179,18 @@ export default function SignIn() {
 
   return (
     <div className="bg-gradient-to-b from-amber-100 via-white to-amber-200 min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Toast notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {/* Animated background elements */}
       <motion.div
-        className="absolute top-20 left-10 w-56 h-56 bg-gradient-to-br from-rose-500 to-amber-300 rounded-full opacity-20 blur-md "
+        className="absolute top-20 left-10 w-56 h-56 bg-gradient-to-br from-rose-500 to-amber-300 rounded-full opacity-20 blur-md"
         initial={{ scale: 0.8, opacity: 0, x: 0 }}
         animate={{ scale: 1, opacity: 0.2, x: 1000 }}
         transition={{ duration: 12, delay: 0.2, ease: "linear" }}
@@ -91,13 +224,13 @@ export default function SignIn() {
 
         {/* Sign In Card */}
         <div className="group">
-          <div className="border-none rounded-2xl bg-gradient-to-bl from-amber-300 to-pink-500 shadow-lg   shadow-gray-500 transition-all duration-300">
-            <div className="border-3 border-black rounded-2xl bg-white relative bottom-3 right-4 transition-all duration-300 p-8">
+          <div className="border-none rounded-2xl bg-gradient-to-bl from-amber-300 to-pink-500 shadow-lg shadow-gray-500 transition-all duration-300">
+            <form onSubmit={handleSubmit} className="border-3 border-black rounded-2xl bg-white relative bottom-3 right-4 transition-all duration-300 p-8">
               <div className="space-y-6">
-                {/* Email Field */}
+                {/* Email/Login Field */}
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="login"
                     className="block text-sm font-semibold text-gray-700 mb-2 font-manrope"
                   >
                     Email Address
@@ -108,21 +241,22 @@ export default function SignIn() {
                     </div>
                     <input
                       type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
+                      id="login"
+                      name="login"
+                      value={formData.login}
                       onChange={handleInputChange}
+                      disabled={loading}
                       className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl font-manrope focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm ${
-                        errors.email
+                        errors.login
                           ? "border-red-400 focus:border-red-500"
                           : "border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
-                      }`}
+                      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                       placeholder="Enter your email"
                     />
                   </div>
-                  {errors.email && (
+                  {errors.login && (
                     <p className="mt-1 text-sm text-red-500 font-medium">
-                      {errors.email}
+                      {errors.login}
                     </p>
                   )}
                 </div>
@@ -145,17 +279,19 @@ export default function SignIn() {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl font-manrope focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm ${
-                        errors.email
+                      disabled={loading}
+                      className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl font-manrope focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm ${
+                        errors.password
                           ? "border-red-400 focus:border-red-500"
                           : "border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
-                      }`}
+                      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                       placeholder="Enter your password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-amber-600 transition-colors duration-200"
+                      disabled={loading}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-amber-600 transition-colors duration-200 disabled:opacity-50"
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5 text-gray-400" />
@@ -175,13 +311,16 @@ export default function SignIn() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <input
-                      id="remember-me"
-                      name="remember-me"
+                      id="rememberMe"
+                      name="rememberMe"
                       type="checkbox"
-                      className="h-4 w-4 text-amber-500 focus:ring-amber-400 border-gray-300 rounded"
+                      checked={formData.rememberMe}
+                      onChange={handleInputChange}
+                      disabled={loading}
+                      className="h-4 w-4 text-amber-500 focus:ring-amber-400 border-gray-300 rounded disabled:opacity-50"
                     />
                     <label
-                      htmlFor="remember-me"
+                      htmlFor="rememberMe"
                       className="ml-2 block text-sm text-gray-700 font-manrope"
                     >
                       Remember me
@@ -198,13 +337,15 @@ export default function SignIn() {
 
                 {/* Sign In Button */}
                 <div className="group ml-2">
-                  <div className="border-2 border-black rounded-xl bg-black ">
+                  <div className="border-2 border-black rounded-xl bg-black">
                     <button
-                      type="button"
-                      onClick={handleSubmit}
-                      className="w-full border-2 border-black bg-gradient-to-r from-amber-500 via-pink-400 to-red-400 text-white font-semibold py-3 rounded-xl relative bottom-2 right-2 group-hover:bottom-0.5 group-hover:right-0.5 transition-all duration-300 ease-in-out font-manrope hover:text-black"
+                      type="submit"
+                      disabled={loading}
+                      className={`w-full border-2 border-black bg-gradient-to-r from-amber-500 via-pink-400 to-red-400 text-white font-semibold py-3 rounded-xl relative bottom-2 right-2 group-hover:bottom-0.5 group-hover:right-0.5 transition-all duration-300 ease-in-out font-manrope hover:text-black ${
+                        loading ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     >
-                      Sign In →
+                      {loading ? 'Signing In...' : 'Sign In →'}
                     </button>
                   </div>
                 </div>
@@ -215,7 +356,7 @@ export default function SignIn() {
                     <div className="w-full border-t border-gray-300"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500 font-manrope font-sem">
+                    <span className="px-2 bg-white text-gray-500 font-manrope font-semibold">
                       Or continue with
                     </span>
                   </div>
@@ -225,7 +366,10 @@ export default function SignIn() {
                 <div className="flex gap-3 justify-center">
                   <button
                     type="button"
-                    className="w-full inline-flex justify-center py-3 px-4 border-2 border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 hover:border-amber-300 transition-all duration-200 font-manrope"
+                    disabled={loading}
+                    className={`w-full inline-flex justify-center py-3 px-4 border-2 border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 hover:border-amber-300 transition-all duration-200 font-manrope ${
+                      loading ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                       <path
@@ -249,7 +393,7 @@ export default function SignIn() {
                   </button>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
 
