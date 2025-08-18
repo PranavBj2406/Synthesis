@@ -246,7 +246,7 @@ export default function SignIn({ onSignInSuccess }) {
                       value={formData.login}
                       onChange={handleInputChange}
                       disabled={loading}
-                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl font-manrope focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm ${
+                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl font-manrope font-semibold focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm placeholder:font-semibold  ${
                         errors.login
                           ? "border-red-400 focus:border-red-500"
                           : "border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
@@ -280,7 +280,7 @@ export default function SignIn({ onSignInSuccess }) {
                       value={formData.password}
                       onChange={handleInputChange}
                       disabled={loading}
-                      className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl font-manrope focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm ${
+                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl font-manrope font-semibold focus:outline-none transition-all duration-300 placeholder:font-manrope placeholder:text-sm placeholder:font-semibold  ${
                         errors.password
                           ? "border-red-400 focus:border-red-500"
                           : "border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
