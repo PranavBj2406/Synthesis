@@ -64,16 +64,13 @@ export default function SignUp() {
         setPasswordError("");
       } else {
         setPasswordValid(false);
-        setPasswordError(
-          `Password must contain ${errors.join(", ")}.`
-        );
+        setPasswordError(`Password must contain ${errors.join(", ")}.`);
       }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     if (!formData.username || !formData.email || !formData.password) {
       setMessage("Please fill in all required fields");
@@ -168,13 +165,25 @@ export default function SignUp() {
               <div className="flex flex-row items-center gap-2 mt-4">
                 <h1 className="text-lg font-manrope font-semibold">Password</h1>
                 <IoMdAlert
-                  className={`text-2xl cursor-pointer duration-700 ease-in-out ${passwordValid === false ? "text-red-600" : "text-gray-600 hover:text-amber-800"}`}
+                  className={`text-2xl cursor-pointer duration-700 ease-in-out ${
+                    passwordValid === false
+                      ? "text-red-600"
+                      : "text-gray-600 hover:text-amber-800"
+                  }`}
                   title={
                     "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, a number, and a special character."
                   }
                 />
               </div>
-              <div className={`h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5 ${passwordValid === false ? "border-red-500" : passwordValid === true ? "border-black" : ""}`}>
+              <div
+                className={`h-12 w-[323px] border-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-700 rounded-xl ml-2 mt-5 ${
+                  passwordValid === false
+                    ? "border-red-500"
+                    : passwordValid === true
+                    ? "border-black"
+                    : ""
+                }`}
+              >
                 <input
                   className="flex justify-start items-center border-2 mt-2 font-manrope text-sm font-semibold bg-white h-11 px-3 rounded-md w-[320px] focus:outline-none relative right-2 bottom-4 "
                   placeholder="enter password"
@@ -254,24 +263,28 @@ export default function SignUp() {
         >
           <defs>
             <radialGradient id="bgGradient" cx="50%" cy="50%" r="80%">
-              <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.7" />
-              <stop offset="60%" stopColor="#f472b6" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#f87171" stopOpacity="0.3" />
+              <stop offset="0%" stopColor="#fff7ed" stopOpacity="0.9" />{" "}
+              {/* Off-white */}
+              <stop offset="60%" stopColor="#fcd34d" stopOpacity="0.6" />{" "}
+              {/* Amber-300 */}
+              <stop offset="100%" stopColor="#f9a8d4" stopOpacity="0.4" />
+              {/* Pink-300 */}
             </radialGradient>
           </defs>
           <path
             d="
-              M 100 400
-              Q 180 200 350 150
-              Q 500 120 600 250
-              Q 650 350 500 500
-              Q 350 600 200 500
-              Q 80 450 100 400
-              Z
-            "
+      M 100 400
+      Q 180 200 350 150
+      Q 500 120 600 250
+      Q 650 350 500 500
+      Q 350 600 200 500
+      Q 80 450 100 400
+      Z
+    "
             fill="url(#bgGradient)"
           />
         </svg>
+
         <div className="flex justify-center items-center border-none rounded-full relative bottom-5 z-10">
           <Player
             src="https://assets.lottiefiles.com/packages/lf20_kkflmtur.json"

@@ -158,9 +158,9 @@ export default function SignIn({ onSignInSuccess }) {
             onSignInSuccess(userData, token);
           }, 1000);
         } else {
-          // Default behavior: navigate to dashboard
+          // Default behavior: navigate to home
           setTimeout(() => {
-            navigate('/dashboard');
+            navigate('/home');
           }, 1000);
         }
       } else {

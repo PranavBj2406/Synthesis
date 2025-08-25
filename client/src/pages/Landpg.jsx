@@ -12,11 +12,13 @@ import Icon6 from "../assets/icons/icon6.png";
 import Gif1 from "../assets/gif1.gif";
 import {Link} from "react-router-dom";
 import bg from "../assets/bgforhome.png";
+import GenerateDots from "../components/GenerateDots";  
 
 
 export default function Landpg() {
   return (
     <div className="bg-gradient-to-b from-amber-100 via-white to-amber-200 min-h-screen mx-auto w-full px-12 relative">
+      <GenerateDots count={50}/>
       <div className="relative z-10">
         {/*Introduction*/ }
         <h1 className="pt-10 text-5xl font-bold font-manrope bg-gradient-to-r from-pink-500 via-red-400 to-amber-500 bg-clip-text text-transparent w-[550px]">
@@ -63,6 +65,7 @@ export default function Landpg() {
         <div className=" w-full border mt-25" />
 
         <div className="mt-13">
+          
           <span className="font-manrope text-2xl  font-semibold">
             {" "}
             Why Use Synthesis
