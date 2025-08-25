@@ -198,7 +198,7 @@ export default function Landpg() {
           <img src={Gif1} alt="" className="  "></img>
 
           {/* generate button */}
-          <Link to="/Home">
+          <Link to="/signin">
             <div className="group mt-10 ml-6">
               <div className="border-2 border-black h-[50px] w-[240px] rounded-3xl bg-black">
                 <div className="border-2 border-black h-[50px] w-[240px] bg-gradient-to-tl from-amber-500 via-pink-400 to-red-400 rounded-3xl flex items-center justify-center relative bottom-2 right-2 group-hover:bottom-1 group-hover:right-1 transition-all duration-300 ease-in-out">

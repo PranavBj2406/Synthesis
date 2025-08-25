@@ -6,7 +6,7 @@ import profile from "../assets/profile icon.svg";
 
 export default function Header2() {
   return (
-    <header className="bg-gradient-to-br from-emerald-100 to-white border border-none h-28 flex items-center z-10 relative w-full ">
+    <header className="bg-gradient-to-b from-emerald-50 to-white border border-none h-28 flex items-center z-10 relative w-full ">
       <div className="flex justify-between items-center max-w-[1450px] mx-auto w-full px-4">
         <div className="flex-shrink-0">
           <h1>
