@@ -19,7 +19,7 @@ export default function Home() {
       {/* Main content wrapper (matches header max-width) */}
       <div className="max-w-[1450px] mx-auto w-full px-4 py-6">
         <p className="text-xl font-bold font-manrope mb-2">
-          <spam className="text-emerald-500 ">Hello</spam> User 🙂
+          <span className="text-emerald-500 ">Hello</span> User 🙂
         </p>
         <p className="text-sm font-bold font-manrope mb-3">
           Welcome to Synthesis , a Multimodal Synthetic Healthcare <br></br>{" "}

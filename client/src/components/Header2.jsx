@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import { CircleUserRound } from "lucide-react";
-import profile from "../assets/profile icon.svg";
+import profile from "../assets/profileIcon.svg";
 
 export default function Header2() {
   return (
