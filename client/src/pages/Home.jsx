@@ -98,16 +98,16 @@ export default function Home() {
                     </div>
 
                     {/* Gender */}
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <label className="text-sm font-medium">Gender</label>
                       <div className="relative">
                         <select
                           value={gender}
                           onChange={(e) => setGender(e.target.value)}
-                          className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 
-             bg-white text-gray-700 font-semibold text-sm md:text-base
+                          className="w-1/4 border border-gray-300 rounded-lg px-3 py-2 pr-8 
+             bg-white text-gray-700 font-semibold text-sm md:text-sm
              focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-             appearance-none"
+             appearance-none mt-1 "
                         >
                           <option className="font-semibold text-sm md:text-base">
                             Male
@@ -119,24 +119,22 @@ export default function Home() {
                             Other
                           </option>
                         </select>
-                        <span className="absolute inset-y-0 right-2 flex items-center text-gray-400 pointer-events-none">
-                          ▼
-                        </span>
+                    
                       </div>
                     </div>
 
                     {/* Disease */}
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
-                        Disease type
+                        Disease type<br></br>
                       </label>
                       <select
                         value={diseaseType}
                         onChange={(e) => setDiseaseType(e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-8 
-             bg-white text-gray-700 font-semibold text-sm md:text-base
+                        className="w-1/4 border border-gray-300 rounded-lg px-3 py-2 pr-8 
+             bg-white text-gray-700 font-semibold text-sm md:text-sm
              focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-             appearance-none"
+             appearance-none mt-2"
                       >
                        <option className="font-semibold text-sm md:text-base">Diabetes</option>
                         <option className="font-semibold text-sm md:text-base">Hypertension</option>
@@ -166,7 +164,7 @@ export default function Home() {
                         className="w-full accent-emerald-600"
                       />
                       {/* Note */}
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700 mt-5 w-1/2">
                         <b>Note:</b> The quality of data depends on training
                         epochs.
                       </div>
@@ -175,7 +173,7 @@ export default function Home() {
                       <button
                         onClick={handleGenerate}
                         disabled={isGenerating}
-                        className="w-[140px] bg-gray-300 text-black text-bold py-2 rounded-full font-semibold hover:bg-gray-400 disabled:opacity-60 duration-500 ease-in-out shadow-black shadow-sm hover:shadow-md"
+                        className="w-[140px] bg-gray-300/80 text-black text-bold py-2 rounded-full font-semibold hover:bg-gray-400 disabled:opacity-60 duration-500 ease-in-out shadow-black shadow-sm hover:shadow-md mt-4"
                       >
                         {isGenerating ? (
                           <span className="flex items-center justify-center gap-2">
@@ -263,10 +261,9 @@ export default function Home() {
                         className="w-full accent-emerald-600"
                       />
                       {/* Note */}
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700">
-                        <b>Note:</b>The more the no. of Epocs cycle and records
-                        you want the model to Train more the time it takes to
-                        generate the data. So please generate as per to
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700 mt-3">
+                        <b>Note:</b>The value of Epocs cycle and records that is to be generated effects the time taken to train the model.
+                        .So train the model as per to
                         requirements
                       </div>
 
@@ -274,15 +271,15 @@ export default function Home() {
                       <button
                         onClick={handleGenerate}
                         disabled={isGenerating}
-                        className="w-[140px] bg-gray-300 text-black text-bold py-2 rounded-full font-semibold hover:bg-gray-400 disabled:opacity-60 duration-500 ease-in-out shadow-black shadow-sm hover:shadow-md"
+                        className="w-[140px] bg-gray-300 text-black text-bold py-2 rounded-full font-semibold hover:bg-gray-400 disabled:opacity-60 duration-500 ease-in-out shadow-black shadow-sm hover:shadow-md mt-3"
                       >
                         {isGenerating ? (
                           <span className="flex items-center justify-center gap-2">
                             <Loader2 className="w-5 h-5 animate-spin" />{" "}
-                            Generating data...
+                            Traning Model...
                           </span>
                         ) : (
-                          "Generate"
+                          "Train Model"
                         )}
                       </button>
                     </div>
