@@ -8,12 +8,13 @@ import Header from "./components/Header";
 import Header2 from "./components/Header2";
 import About from "./pages/About";
 import PrivateRoute from "./components/PrivateRoute";
+import Profile from "./pages/Profile";
 
 function AppContent() {
   const location = useLocation();
 
   // List of private routes where Header2 should appear
-  const header2Routes = ["/home"];
+  const header2Routes = ["/home","/profile"];
 
   const showHeader2 = header2Routes.some((route) =>
     location.pathname.startsWith(route)
@@ -25,7 +26,8 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<Landpg />} />
-         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} /> 
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} /> 
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} /> 
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/about" element={<About />} />
