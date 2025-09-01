@@ -158,57 +158,40 @@ export default function Profile({ onUpdateProfile, onLogout }) {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      setIsLoggingOut(true);
-      setError(null);
+  const handleLogout = () => {
+  try {
+    setIsLoggingOut(true);
+    setError(null);
 
-      const token = getAuthToken();
+    // Clear tokens from storage
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
 
-      // Call logout endpoint
-      const response = await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+    console.log("Tokens cleared, user logged out");
 
-      // Clear tokens regardless of response (in case server is down)
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
-
-      if (response.ok) {
-        console.log("Logout successful");
-      } else {
-        console.warn(
-          "Logout endpoint returned error, but tokens cleared locally"
-        );
-      }
-
-      // Call parent component's logout handler if provided
-      if (onLogout) {
-        onLogout();
-      } else {
-        // Default behavior - redirect to login
-        window.location.href = "/login";
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-
-      // Even if logout fails, clear tokens and redirect
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
-
-      if (onLogout) {
-        onLogout();
-      } else {
-        window.location.href = "/login";
-      }
-    } finally {
-      setIsLoggingOut(false);
+    // Call parent component's logout handler if provided
+    if (onLogout) {
+      onLogout();
+    } else {
+      // Default behavior - redirect to home
+      window.location.href = "/";
     }
-  };
+  } catch (error) {
+    console.error("Error during logout:", error);
+    
+    // Even if something fails, still clear tokens
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    
+    if (onLogout) {
+      onLogout();
+    } else {
+      window.location.href = "/";
+    }
+  } finally {
+    setIsLoggingOut(false);
+  }
+};
 
   // Show loading state
   if (loading) {
