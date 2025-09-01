@@ -217,7 +217,7 @@ export default function Home() {
               {/* Form */}
               <div className="lg:col-span-2">
                 <h2 className="text-3xl font-bold font-manrope mb-3">
-                  Model Training and Paramter Options
+                  Model Training and Parameter Options
                 </h2>
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold mb-4">

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import { CircleUserRound } from "lucide-react";
 import profile from "../assets/profileIcon.svg";
+import Name from "../assets/Name2.png";
 
 export default function Header2() {
   return (
@@ -10,10 +11,8 @@ export default function Header2() {
       <div className="flex justify-between items-center max-w-[1450px] mx-auto w-full px-4">
         <div className="flex-shrink-0">
           <h1>
-            <Link to="/">
-              <span className=" font-manrope text-4xl font-bold flex items-start bg-gradient-to-br from-pink-500  to-yellow-400 bg-clip-text text-transparent hover:bg-gradient-to-bl hover:from-yellow-400 hover:to-pink-500 duration-700">
-                SYNTHESIS
-              </span>
+            <Link to="/home">
+              <img src={Name} alt="Logo" className="h-12 w-auto" />
             </Link>
           </h1>
         </div>
