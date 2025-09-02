@@ -2,17 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import Name from "../assets/Name.png";
+import Logo from "../assets/Logo1.png";
+
 
 export default function Header() {
   return (
     <header className="bg-gradient-to-b from-amber-200 to-amber-100 border border-none h-24 flex items-center z-10 relative w-full ">
       <div className="flex justify-between items-center max-w-[1450px] mx-auto w-full px-4">
         <div className="flex-shrink-0">
-          <h1>
-            <Link to="/">
+            <Link to="/" className="flex flex-row items-center ">
+              <img src={Logo} alt="Logo" className="h-15 w-auto" />
               <img src={Name} alt="Logo" className="h-10 w-auto" />
-            </Link>
-          </h1>
+            </Link>         
         </div>
 
         <nav className="flex-grow flex justify-end">

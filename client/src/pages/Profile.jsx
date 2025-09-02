@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Edit, Mail, User, Calendar, LogOut } from "lucide-react";
 import { Lock } from "lucide-react";
 import profileAvatar from "../assets/profileIcon2.svg";
-
+import { motion } from "framer-motion";
 export default function Profile({ onUpdateProfile, onLogout }) {
   const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState({
@@ -159,39 +159,39 @@ export default function Profile({ onUpdateProfile, onLogout }) {
   };
 
   const handleLogout = () => {
-  try {
-    setIsLoggingOut(true);
-    setError(null);
+    try {
+      setIsLoggingOut(true);
+      setError(null);
 
-    // Clear tokens from storage
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+      // Clear tokens from storage
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
 
-    console.log("Tokens cleared, user logged out");
+      console.log("Tokens cleared, user logged out");
 
-    // Call parent component's logout handler if provided
-    if (onLogout) {
-      onLogout();
-    } else {
-      // Default behavior - redirect to home
-      window.location.href = "/";
+      // Call parent component's logout handler if provided
+      if (onLogout) {
+        onLogout();
+      } else {
+        // Default behavior - redirect to home
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+
+      // Even if something fails, still clear tokens
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+
+      if (onLogout) {
+        onLogout();
+      } else {
+        window.location.href = "/";
+      }
+    } finally {
+      setIsLoggingOut(false);
     }
-  } catch (error) {
-    console.error("Error during logout:", error);
-    
-    // Even if something fails, still clear tokens
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    
-    if (onLogout) {
-      onLogout();
-    } else {
-      window.location.href = "/";
-    }
-  } finally {
-    setIsLoggingOut(false);
-  }
-};
+  };
 
   // Show loading state
   if (loading) {
@@ -232,9 +232,23 @@ export default function Profile({ onUpdateProfile, onLogout }) {
           {error}
         </div>
       )}
+      {/* BACKGROUND ANIMATIONS */}
+      <motion.div
+        className="absolute w-[550px] h-[550px] left-5 top-[145px] border-none bg-lime-500 rounded-full blur-2xl opacity-100 z-[-4]"
+        initial={{ opacity: 0.2 }}
+        animate={{ x: [0, 800,0] }}
+        transition={{ duration:40, ease: "easeInOut", repeat: Infinity }} // runs once only
+      />
+
+      <motion.div
+        className="absolute w-[400px] h-[400px] left-1 top-[400px] border-none bg-emerald-300 rounded-full blur-3xl opacity-80 z-[-5]"
+        initial={{ scale: 0.8, opacity: 0.5 }}
+        animate={{ x: [0, 1000,0] }} // Reduced movement from 100px to 50px
+        transition={{ duration:40, ease: "easeInOut",repeat: Infinity }}
+      ></motion.div>
 
       {/* Profile Header */}
-      <div className="rounded-2xl p-8 bg-slate-100/60 shadow-lg animate-fade-in border-none flex w-2/3 h-64 mx-auto">
+      <div className="rounded-2xl p-8 bg-slate-100/40 shadow-lg animate-fade-in border-none flex w-2/3 h-64 mx-auto">
         <div className="flex flex-col justify-start md:flex-row items-center gap-6">
           {/* Avatar */}
           <div className="relative">
@@ -400,7 +414,6 @@ export default function Profile({ onUpdateProfile, onLogout }) {
               disabled={isLoggingOut}
               className="mt-4 w-1/2 px-3 py-3  bg-red-500 text-white border-none shadow-md text-sm font-bold rounded-md transition hover:bg-red-400 duration-300 ease-in-out hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed  gap-2"
             >
-            
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
           </div>
