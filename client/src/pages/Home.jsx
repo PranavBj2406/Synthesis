@@ -89,8 +89,8 @@ export default function Home() {
                       </div>
                       <input
                         type="range"
-                        min="1"
-                        max="100"
+                        min="18"
+                        max="90"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
                         className="w-full accent-emerald-600"
@@ -137,10 +137,10 @@ export default function Home() {
              appearance-none mt-2"
                       >
                        <option className="font-semibold text-sm md:text-base">Diabetes</option>
-                        <option className="font-semibold text-sm md:text-base">Hypertension</option>
                         <option className="font-semibold text-sm md:text-base">Heart Disease</option>
-                       <option className="font-semibold text-sm md:text-base">Cancer</option>
                         <option className="font-semibold text-sm md:text-base">Respiratory</option>
+                        <option className="font-semibold text-sm md:text-base">Neurological</option>
+                       <option className="font-semibold text-sm md:text-base">Others</option>
                       </select>
                     </div>
 
@@ -234,7 +234,7 @@ export default function Home() {
                       </div>
                       <input
                         type="range"
-                        min="11"
+                        min="10"
                         max="300"
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
@@ -245,7 +245,7 @@ export default function Home() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <label className="font-medium">
-                          No. of Records to Generate
+                          Batch Size
                         </label>
                         <span className="font-semibold text-emerald-600">
                           {recordCount}
@@ -253,9 +253,9 @@ export default function Home() {
                       </div>
                       <input
                         type="range"
-                        min="100"
-                        max="1000"
-                        step="10"
+                        min="8"
+                        max="128"
+                        step="1"
                         value={recordCount}
                         onChange={(e) => setRecordCount(e.target.value)}
                         className="w-full accent-emerald-600"
