@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Edit, Mail, User, Calendar, LogOut } from "lucide-react";
 import { Lock } from "lucide-react";
-import profileAvatar from "../assets/profileIcon2.svg";
+import profileAvatar from "../assets/ProfileIcon2.svg";
 import { motion } from "framer-motion";
 export default function Profile({ onUpdateProfile, onLogout }) {
   const [isEditing, setIsEditing] = useState(false);
