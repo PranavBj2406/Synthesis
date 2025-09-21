@@ -10,6 +10,7 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from config import get_config, validate_config
 from datetime import datetime
+from app.routes.healthcare_gan_routes import healthcare_gan_bp
 
 # Application metadata
 __version__ = '1.0.0'
@@ -62,6 +63,8 @@ def create_app(config_name=None):
     # Application context processors
     register_context_processors(app)
     
+    app.register_blueprint(healthcare_gan_bp)
+
     return app
 
 def init_extensions(app):

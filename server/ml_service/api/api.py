@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
-from schemas import *
+from .schemas import *
 from train import Trainer
 from generate import DataGenerator
 from model_registry import model_registry
