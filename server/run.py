@@ -47,10 +47,15 @@ if __name__ == '__main__':
     print("   GET  /api/auth/profile              - Get user profile (protected)")
     print("   POST /api/auth/logout               - User logout")
     print("   POST /api/auth/forgot-password      - Password reset request")
+    print("   GET /api/healthcare-gan/health      - Health check")
+    print("   GET /api/healthcare-gan/metrics     - Get training metrics")
+    print("   POST /api/healthcare-gan/train      - Train GAN models")
+    print("   POST /api/healthcare-gan/generate   - Generate synthetic healthcare data")
+    print("   GET  /api/healthcare-gan/status     - Integration status")
+    print("   GET  /api/healthcare-gan/test       - Integration Test")
     print("=" * 60)
     print("Press Ctrl+C to stop the server")
     print("=" * 60)
-    
     try:
         app.run(
             host=host,
