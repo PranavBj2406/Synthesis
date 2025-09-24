@@ -1,9 +1,5 @@
-from pydantic import BaseModel, Field, validator
-from typing import Optional, Dict, Any, List
-from pathlib import Path
-
-# Base dataset folder inside your project
-BASE_DATASET_DIR = Path(__file__).resolve().parent.parent / "dataset"
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict, Any
 
 class TrainRequest(BaseModel):
     time_series_path: str = Field(..., description="Path to time series CSV file",
@@ -25,6 +21,7 @@ class TrainRequest(BaseModel):
 class TrainResponse(BaseModel):
     message: str
     timestamp: str
+    training_history: Optional[Dict[str, Any]] = Field(default_factory=dict)
     training_history: Optional[Dict[str, Any]] = Field(default_factory=dict)
     epochs: int
 
