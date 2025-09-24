@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import List, Optional, Dict, Any
 
 class TrainRequest(BaseModel):
@@ -21,7 +21,6 @@ class TrainRequest(BaseModel):
 class TrainResponse(BaseModel):
     message: str
     timestamp: str
-    training_history: Optional[Dict[str, Any]] = Field(default_factory=dict)
     training_history: Optional[Dict[str, Any]] = Field(default_factory=dict)
     epochs: int
 
