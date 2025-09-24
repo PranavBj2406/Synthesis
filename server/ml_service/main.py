@@ -1,0 +1,74 @@
+import uvicorn
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from api.api import router
+import logging
+import traceback
+from config import logger
+
+app = FastAPI(
+    title="Healthcare ML Service",
+    description="Synthetic Healthcare Data Generation Microservice",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Add CORS middleware for frontend integration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure based on your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Exception handlers at app level (not router level)
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "status": "error",
+            "message": exc.detail,
+            "details": str(exc)
+        }
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception: {str(exc)}")
+    logger.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "status": "error", 
+            "message": "Internal server error",
+            "details": str(exc)
+        }
+    )
+
+# Include API router
+app.include_router(router, prefix="/api/v1")
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Healthcare ML Service API",
+        "status": "running",
+        "version": "1.0.0",
+        "endpoints": {
+            "train": "/api/v1/train",
+            "generate": "/api/v1/generate", 
+            "validate": "/api/v1/validate",
+            "status": "/api/v1/models/status"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
