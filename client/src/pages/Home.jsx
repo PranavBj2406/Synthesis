@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Loader2, User, Database, Activity, BookOpen, Download, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  Loader2,
+  User,
+  Database,
+  Activity,
+  BookOpen,
+  Download,
+  FileText,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
 export default function Home() {
   const [age, setAge] = useState(42);
@@ -22,21 +32,24 @@ export default function Home() {
     setGeneratedData(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/healthcare-gan/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          num_samples: parseInt(recordCount),
-          model_type: 'patient_data',
-          parameters: {
-            age: parseInt(age),
-            gender: gender,
-            disease_type: diseaseType
-          }
-        })
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/healthcare-gan/generate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            num_samples: parseInt(recordCount),
+            model_type: "patient_data",
+            parameters: {
+              age: parseInt(age),
+              gender: gender,
+              disease_type: diseaseType,
+            },
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -58,18 +71,20 @@ export default function Home() {
     setTrainingResults(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/healthcare-gan/train', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          dataset: 'healthcare_records',
-          epochs: parseInt(epochs),
-          batch_size: parseInt(batchSize),
-          model_type: diseaseType.toLowerCase()
-        })
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/healthcare-gan/train",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            time_series_path: "cleaned_merged_data.csv",
+            tabular_path: "cleaned_tabular_data.csv",
+            epochs: parseInt(epochs),
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -87,15 +102,18 @@ export default function Home() {
   // Download generated data as JSON
   const downloadData = () => {
     if (!generatedData) return;
-    
+
     const dataStr = JSON.stringify(generatedData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = `healthcare_data_${new Date().toISOString().split('T')[0]}.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `healthcare_data_${
+      new Date().toISOString().split("T")[0]
+    }.json`;
+
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
   };
 
@@ -118,18 +136,24 @@ export default function Home() {
             Download JSON
           </button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-emerald-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-emerald-600">{generatedData.num_samples || recordCount}</div>
+            <div className="text-2xl font-bold text-emerald-600">
+              {generatedData.num_samples || recordCount}
+            </div>
             <div className="text-sm text-gray-600">Records Generated</div>
           </div>
           <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{generatedData.model_type || 'patient_data'}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {generatedData.model_type || "patient_data"}
+            </div>
             <div className="text-sm text-gray-600">Model Type</div>
           </div>
           <div className="bg-purple-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">{generatedData.generation_time || 'N/A'}s</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {generatedData.generation_time || "N/A"}s
+            </div>
             <div className="text-sm text-gray-600">Generation Time</div>
           </div>
         </div>
@@ -137,14 +161,19 @@ export default function Home() {
         {/* Sample data preview */}
         {generatedData.data && generatedData.data.length > 0 && (
           <div>
-            <h4 className="font-medium mb-3">Sample Generated Records (First 5)</h4>
+            <h4 className="font-medium mb-3">
+              Sample Generated Records (First 5)
+            </h4>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto border-collapse">
                 <thead>
                   <tr className="bg-gray-50">
                     {Object.keys(generatedData.data[0]).map((key) => (
-                      <th key={key} className="border px-4 py-2 text-left text-sm font-medium text-gray-700">
-                        {key.replace('_', ' ').toUpperCase()}
+                      <th
+                        key={key}
+                        className="border px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
+                        {key.replace("_", " ").toUpperCase()}
                       </th>
                     ))}
                   </tr>
@@ -153,8 +182,11 @@ export default function Home() {
                   {generatedData.data.slice(0, 5).map((record, index) => (
                     <tr key={index} className="hover:bg-gray-50">
                       {Object.values(record).map((value, idx) => (
-                        <td key={idx} className="border px-4 py-2 text-sm text-gray-600">
-                          {typeof value === 'number' ? value.toFixed(2) : value}
+                        <td
+                          key={idx}
+                          className="border px-4 py-2 text-sm text-gray-600"
+                        >
+                          {typeof value === "number" ? value.toFixed(2) : value}
                         </td>
                       ))}
                     </tr>
@@ -164,7 +196,8 @@ export default function Home() {
             </div>
             {generatedData.data.length > 5 && (
               <p className="text-sm text-gray-500 mt-2">
-                Showing 5 of {generatedData.data.length} records. Download full dataset using the button above.
+                Showing 5 of {generatedData.data.length} records. Download full
+                dataset using the button above.
               </p>
             )}
           </div>
@@ -193,14 +226,18 @@ export default function Home() {
           <CheckCircle className="w-5 h-5 text-green-500" />
           Training Results
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="bg-green-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{trainingResults.final_loss || 'N/A'}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {trainingResults.final_loss || "N/A"}
+            </div>
             <div className="text-sm text-gray-600">Final Loss</div>
           </div>
           <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{trainingResults.training_time || 'N/A'}s</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {trainingResults.training_time || "N/A"}s
+            </div>
             <div className="text-sm text-gray-600">Training Time</div>
           </div>
         </div>
@@ -244,7 +281,7 @@ export default function Home() {
           Data generator, generate,validate and train model as per to <br></br>
           your requirements and accelerate development
         </p>
-        
+
         {/* Tabs */}
         <div className="border-none rounded-2xl p-7 bg-gradient-to-br from-gray-300/20 to-gray-300/40  shadow-md ">
           <div className="grid grid-cols-4 mb-5 bg-emerald-200 p-2 rounded-xl shadow-md shadow-gray w-full md:w-[600px] ">
@@ -355,11 +392,21 @@ export default function Home() {
                focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
                appearance-none mt-2"
                         >
-                         <option className="font-semibold text-sm md:text-base">Diabetes</option>
-                          <option className="font-semibold text-sm md:text-base">Heart Disease</option>
-                          <option className="font-semibold text-sm md:text-base">Respiratory</option>
-                          <option className="font-semibold text-sm md:text-base">Neurological</option>
-                         <option className="font-semibold text-sm md:text-base">Others</option>
+                          <option className="font-semibold text-sm md:text-base">
+                            Diabetes
+                          </option>
+                          <option className="font-semibold text-sm md:text-base">
+                            Heart Disease
+                          </option>
+                          <option className="font-semibold text-sm md:text-base">
+                            Respiratory
+                          </option>
+                          <option className="font-semibold text-sm md:text-base">
+                            Neurological
+                          </option>
+                          <option className="font-semibold text-sm md:text-base">
+                            Others
+                          </option>
                         </select>
                       </div>
 
@@ -408,10 +455,10 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Error Display */}
               {renderError()}
-              
+
               {/* Results Display */}
               {renderDataResults()}
             </div>
@@ -434,7 +481,9 @@ export default function Home() {
                       {/* Epochs */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <label className="font-medium">Number of Epochs</label>
+                          <label className="font-medium">
+                            Number of Epochs
+                          </label>
                           <span className="font-semibold text-emerald-600">
                             {epochs}
                           </span>
@@ -448,13 +497,11 @@ export default function Home() {
                           className="w-full accent-emerald-600"
                         />
                       </div>
-                      
+
                       {/* Batch Size */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <label className="font-medium">
-                            Batch Size
-                          </label>
+                          <label className="font-medium">Batch Size</label>
                           <span className="font-semibold text-emerald-600">
                             {batchSize}
                           </span>
@@ -470,8 +517,10 @@ export default function Home() {
                         />
                         {/* Note */}
                         <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-700 mt-3">
-                          <b>Note:</b> The value of Epochs cycle and records that is to be generated affects the time taken to train the model.
-                          So train the model as per to requirements.
+                          <b>Note:</b> The value of Epochs cycle and records
+                          that is to be generated affects the time taken to
+                          train the model. So train the model as per to
+                          requirements.
                         </div>
 
                         {/* Button */}
@@ -494,10 +543,10 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Error Display */}
               {renderError()}
-              
+
               {/* Training Results Display */}
               {renderTrainingResults()}
             </div>
