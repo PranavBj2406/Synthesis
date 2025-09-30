@@ -8,9 +8,9 @@ import traceback
 from config import logger
 
 app = FastAPI(
-    title="Healthcare ML Service",
-    description="Synthetic Healthcare Data Generation Microservice",
-    version="1.0.0",
+    title="Diabetes Prediction ML Service",
+    description="Diabetes and Blood Pressure Prediction Microservice",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Exception handlers at app level (not router level)
+# Exception handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
@@ -43,7 +43,7 @@ async def general_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
-            "status": "error", 
+            "status": "error",
             "message": "Internal server error",
             "details": str(exc)
         }
@@ -55,12 +55,13 @@ app.include_router(router, prefix="/api/v1")
 @app.get("/")
 async def root():
     return {
-        "message": "Healthcare ML Service API",
+        "message": "Diabetes Prediction ML Service API",
         "status": "running",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "endpoints": {
             "train": "/api/v1/train",
-            "generate": "/api/v1/generate", 
+            "predict": "/api/v1/predict",
+            "generate": "/api/v1/generate",
             "validate": "/api/v1/validate",
             "status": "/api/v1/models/status"
         }

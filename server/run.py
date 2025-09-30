@@ -50,7 +50,7 @@ if __name__ == '__main__':
     print("   GET /api/healthcare-gan/health      - Health check")
     print("   GET /api/healthcare-gan/metrics     - Get training metrics")
     print("   POST /api/healthcare-gan/train      - Train GAN models")
-    print("   POST /api/healthcare-gan/generate   - Generate synthetic healthcare data")
+    print("   POST /api/healthcare-gan/generate   - Generate synthetic healthcare")
     print("   GET  /api/healthcare-gan/status     - Integration status")
     print("   GET  /api/healthcare-gan/test       - Integration Test")
     print("=" * 60)
