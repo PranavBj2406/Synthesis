@@ -10,6 +10,8 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { PieChart, Pie, BarChart, Bar, LineChart, Line, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+
 
 export default function Home() {
   const [recordCount, setRecordCount] = useState(1000);
@@ -23,6 +25,82 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [diabetesRatio, setDiabetesRatio] = useState(0.5);
   const [hypertensionRatio, setHypertensionRatio] = useState(0.7);
+
+  // Render data visualizations
+const renderDataVisualizations = () => {
+  if (!generatedData?.data?.preview?.sample_patients) return null;
+
+  // Extract tabular_data from each patient object
+  const data = generatedData.data.preview.sample_patients.map(p => p.tabular_data);
+  const totalGenerated = generatedData.data.num_generated;
+
+  if (!Array.isArray(data) || data.length === 0) return null;
+
+  return (
+    <div className="mt-8 space-y-8">
+      <h3 className="text-2xl font-bold">Generated Patient Data</h3>
+      
+      {/* Note about sample data */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+        <b>Note:</b> Showing {data.length} sample records out of {totalGenerated} total generated records. 
+        Full dataset saved to CSV file.
+      </div>
+      
+      {/* Full Data Table */}
+      <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
+        <h4 className="text-lg font-semibold mb-4">Patient Records ({data.length} of {totalGenerated})</h4>
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <table className="min-w-full table-auto border-collapse">
+            <thead className="sticky top-0 bg-gray-100 z-10">
+              <tr>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Patient ID</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Age</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">BMI</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Avg RBS</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">HbA1c</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">BP Reading</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Resp. Rate</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Heart Rate</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">SpO2</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Diabetes</th>
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Hypertension</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((record, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.patient_id}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.age}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.bmi?.toFixed(1)}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.average_rbs?.toFixed(1)}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.hba1c?.toFixed(2)}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.hypertension}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.respiratory_rate}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.heart_rate}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.spo2?.toFixed(1)}</td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm text-center">
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${record.diabetes === 1 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                      {record.diabetes === 1 ? 'Yes' : 'No'}
+                    </span>
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2 text-sm text-center">
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${record.bp_status === 1 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                      {record.bp_status === 1 ? 'Yes' : 'No'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        <p className="text-sm text-gray-500 mt-4">
+          📁 Full dataset saved to: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{generatedData.data.tabular_file}</code>
+        </p>
+      </div>
+    </div>
+  );
+};
 
   // API call for generating healthcare data
   const handleGenerate = async () => {
@@ -51,6 +129,7 @@ export default function Home() {
       }
 
       const data = await response.json();
+       console.log("API Response:", data);
       setGeneratedData(data);
     } catch (err) {
       setError(`Failed to generate data: ${err.message}`);
@@ -425,6 +504,10 @@ export default function Home() {
 
               {/* Results Display */}
               {renderDataResults()}
+
+              {/* Result table */ }
+              {renderDataVisualizations()}
+
             </div>
           )}
 
