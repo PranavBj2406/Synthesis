@@ -2,11 +2,9 @@ from flask import Blueprint, request, jsonify, current_app
 import uuid
 import logging
 
-# Import the client
 try:
     from app.ml.client import HealthcareGANClient
 except ImportError:
-    # Alternative import if above doesn't work
     import sys
     import os
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -31,20 +29,38 @@ def health_check():
         logger.error(f"Health check error: {e}")
         return jsonify({"status": "error", "error": str(e)}), 500
 
-@healthcare_gan_bp.route('/metrics', methods=['GET'])
-def get_metrics():
-    """Get Healthcare GAN metrics"""
+@healthcare_gan_bp.route('/models/status', methods=['GET'])
+def model_status():
+    """Get model training status"""
     try:
-        result = gan_client.get_metrics()
+        result = gan_client.get_model_status()
         status_code = 200 if result["success"] else 500
         return jsonify(result), status_code
     except Exception as e:
-        logger.error(f"Get metrics error: {e}")
+        logger.error(f"Get model status error: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@healthcare_gan_bp.route('/validate', methods=['POST'])
+def validate_data():
+    """Validate healthcare data"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({"success": False, "error": "No data provided"}), 400
+        
+        result = gan_client.validate_data(data)
+        status_code = 200 if result["success"] else 400
+        
+        return jsonify(result), status_code
+        
+    except Exception as e:
+        logger.error(f"Validation error: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 @healthcare_gan_bp.route('/train', methods=['POST'])
 def train_models():
-    """Train Healthcare GAN models"""
+    """Train diabetes and blood pressure prediction models"""
     try:
         data = request.get_json()
         
@@ -55,7 +71,6 @@ def train_models():
         if 'request_id' not in data:
             data['request_id'] = str(uuid.uuid4())
         
-        # Call training endpoint
         result = gan_client.train_models(data)
         status_code = 200 if result["success"] else 500
         
@@ -65,21 +80,63 @@ def train_models():
         logger.error(f"Training error: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
+@healthcare_gan_bp.route('/predict', methods=['POST'])
+def predict_diabetes():
+    """Predict diabetes using trained model"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({"success": False, "error": "No prediction data provided"}), 400
+        
+        # Add request metadata
+        if 'request_id' not in data:
+            data['request_id'] = str(uuid.uuid4())
+        
+        result = gan_client.predict_diabetes(data)
+        status_code = 200 if result["success"] else 500
+        
+        return jsonify(result), status_code
+        
+    except Exception as e:
+        logger.error(f"Prediction error: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
 @healthcare_gan_bp.route('/generate', methods=['POST'])
-def generate_data():
-    """Generate synthetic healthcare data"""
+def generate_synthetic_data():
+    """Generate synthetic healthcare data for testing/training
+    
+    Expected request body:
+    {
+        "num_samples": 100,
+        "diabetes_ratio": 0.5,
+        "hypertension_ratio": 0.7
+    }
+    """
     try:
         data = request.get_json()
         
         if not data:
             return jsonify({"success": False, "error": "No generation parameters provided"}), 400
         
-        # Add request metadata
-        if 'request_id' not in data:
-            data['request_id'] = str(uuid.uuid4())
+        # Validate required fields
+        if 'num_samples' not in data:
+            return jsonify({"success": False, "error": "Missing required field: num_samples"}), 400
         
-        # Call generation endpoint
-        result = gan_client.generate_data(data)
+        # Set default values for optional fields
+        generation_params = {
+            "num_samples": data.get('num_samples'),
+            "diabetes_ratio": data.get('diabetes_ratio', 0.5),
+            "hypertension_ratio": data.get('hypertension_ratio', 0.5)
+        }
+        
+        # Add request metadata if needed
+        if 'request_id' in data:
+            generation_params['request_id'] = data['request_id']
+        else:
+            generation_params['request_id'] = str(uuid.uuid4())
+        
+        result = gan_client.generate_synthetic_data(generation_params)
         status_code = 200 if result["success"] else 500
         
         return jsonify(result), status_code
@@ -93,18 +150,21 @@ def service_status():
     """Get overall service status"""
     try:
         health = gan_client.health_check()
+        model_status = gan_client.get_model_status()
         
         return jsonify({
-            "service": "Healthcare GAN API Integration",
-            "version": "1.0.0",
+            "service": "Healthcare GAN API Integration v2.0.0",
             "ml_service_health": health["status"],
-            "endpoints": [
-                "/api/healthcare-gan/health",
-                "/api/healthcare-gan/metrics", 
-                "/api/healthcare-gan/train",
-                "/api/healthcare-gan/generate",
-                "/api/healthcare-gan/status"
-            ]
+            "model_status": model_status.get("data", {}),
+            "endpoints": {
+                "health": "/api/healthcare-gan/health",
+                "model_status": "/api/healthcare-gan/models/status",
+                "validate": "/api/healthcare-gan/validate",
+                "train": "/api/healthcare-gan/train",
+                "predict": "/api/healthcare-gan/predict",
+                "generate": "/api/healthcare-gan/generate",
+                "status": "/api/healthcare-gan/status"
+            }
         }), 200
         
     except Exception as e:
@@ -112,30 +172,22 @@ def service_status():
 
 @healthcare_gan_bp.route('/test', methods=['GET'])
 def test_integration():
-    """Test Healthcare GAN integration"""
+    """Test Healthcare GAN integration with all endpoints"""
     try:
-        # Test connectivity
+        # Test health
         health = gan_client.health_check()
         
-        # Test metrics endpoint
-        metrics = gan_client.get_metrics()
+        # Test model status
+        model_status = gan_client.get_model_status()
         
         return jsonify({
             "test": "Healthcare GAN Integration Test",
             "health_check": health,
-            "metrics_check": metrics,
-            "integration_status": "working" if health["status"] == "healthy" else "error"
+            "model_status": model_status,
+            "integration_status": "working" if health["status"] == "healthy" else "error",
+            "api_version": "v2.0.0"
         }), 200
         
     except Exception as e:
         logger.error(f"Integration test error: {e}")
         return jsonify({"error": str(e)}), 500
-
-# Error handlers for the blueprint
-@healthcare_gan_bp.errorhandler(404)
-def not_found(error):
-    return jsonify({"error": "Healthcare GAN endpoint not found"}), 404
-
-@healthcare_gan_bp.errorhandler(500)
-def internal_error(error):
-    return jsonify({"error": "Healthcare GAN service internal error"}), 500

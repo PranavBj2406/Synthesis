@@ -12,9 +12,6 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [age, setAge] = useState(42);
-  const [gender, setGender] = useState("Male");
-  const [diseaseType, setDiseaseType] = useState("Diabetes");
   const [recordCount, setRecordCount] = useState(1000);
   const [epochs, setEpochs] = useState(100);
   const [batchSize, setBatchSize] = useState(32);
@@ -24,6 +21,8 @@ export default function Home() {
   const [generatedData, setGeneratedData] = useState(null);
   const [trainingResults, setTrainingResults] = useState(null);
   const [error, setError] = useState(null);
+  const [diabetesRatio, setDiabetesRatio] = useState(0.5);
+  const [hypertensionRatio, setHypertensionRatio] = useState(0.7);
 
   // API call for generating healthcare data
   const handleGenerate = async () => {
@@ -41,12 +40,8 @@ export default function Home() {
           },
           body: JSON.stringify({
             num_samples: parseInt(recordCount),
-            model_type: "patient_data",
-            parameters: {
-              age: parseInt(age),
-              gender: gender,
-              disease_type: diseaseType,
-            },
+            diabetes_ratio: parseFloat(diabetesRatio) || 0.5, // FIXED: Use actual API params
+            hypertension_ratio: parseFloat(hypertensionRatio) || 0.7, // FIXED: Use actual API params
           }),
         }
       );
@@ -336,80 +331,49 @@ export default function Home() {
                       Patient Characteristics
                     </h3>
                     <div className="bg-white border border-none rounded-xl shadow-lg p-6 space-y-6">
-                      {/* Age */}
+                      {/* Diabetes Ratio */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <label className="font-medium">Age</label>
+                          <label className="font-medium">Diabetes Ratio</label>
                           <span className="font-semibold text-emerald-600">
-                            {age}
+                            {diabetesRatio.toFixed(1)}
                           </span>
                         </div>
                         <input
                           type="range"
-                          min="18"
-                          max="90"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)}
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={diabetesRatio}
+                          onChange={(e) =>
+                            setDiabetesRatio(Number(e.target.value))
+                          }
                           className="w-full accent-emerald-600"
                         />
                       </div>
 
-                      {/* Gender */}
+                      {/* Hypertension Ratio */}
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Gender</label>
-                        <div className="relative">
-                          <select
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            className="w-1/4 border border-gray-300 rounded-lg px-3 py-2 pr-8 
-               bg-white text-gray-700 font-semibold text-sm md:text-sm
-               focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-               appearance-none mt-1 "
-                          >
-                            <option className="font-semibold text-sm md:text-base">
-                              Male
-                            </option>
-                            <option className="font-semibold text-sm md:text-base">
-                              Female
-                            </option>
-                            <option className="font-semibold text-sm md:text-base">
-                              Other
-                            </option>
-                          </select>
+                        <div className="flex justify-between text-sm">
+                          <label className="font-medium">
+                            Hypertension Ratio
+                          </label>
+                          <span className="font-semibold text-emerald-600">
+                            {hypertensionRatio.toFixed(1)}
+                          </span>
                         </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={hypertensionRatio}
+                          onChange={(e) =>
+                            setHypertensionRatio(Number(e.target.value))
+                          }
+                          className="w-full accent-emerald-600"
+                        />
                       </div>
-
-                      {/* Disease */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Disease type<br></br>
-                        </label>
-                        <select
-                          value={diseaseType}
-                          onChange={(e) => setDiseaseType(e.target.value)}
-                          className="w-1/4 border border-gray-300 rounded-lg px-3 py-2 pr-8 
-               bg-white text-gray-700 font-semibold text-sm md:text-sm
-               focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 
-               appearance-none mt-2"
-                        >
-                          <option className="font-semibold text-sm md:text-base">
-                            Diabetes
-                          </option>
-                          <option className="font-semibold text-sm md:text-base">
-                            Heart Disease
-                          </option>
-                          <option className="font-semibold text-sm md:text-base">
-                            Respiratory
-                          </option>
-                          <option className="font-semibold text-sm md:text-base">
-                            Neurological
-                          </option>
-                          <option className="font-semibold text-sm md:text-base">
-                            Others
-                          </option>
-                        </select>
-                      </div>
-
                       {/* Record Count */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
@@ -423,10 +387,10 @@ export default function Home() {
                         <input
                           type="range"
                           min="10"
-                          max="10000"
+                          max="1000"
                           step="10"
                           value={recordCount}
-                          onChange={(e) => setRecordCount(e.target.value)}
+                          onChange={(e) => setRecordCount(Number(e.target.value))}
                           className="w-full accent-emerald-600"
                         />
                         {/* Note */}

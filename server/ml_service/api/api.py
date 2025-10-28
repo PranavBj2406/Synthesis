@@ -17,7 +17,7 @@ from generate import DiabetesDataGenerator
 from config import DEFAULT_TIME_SERIES_PATH, DEFAULT_TABULAR_PATH
 
 logger = logging.getLogger(__name__)
-
+ 
 router = APIRouter()
 
 # Global instances
