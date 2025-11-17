@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Loader2, User, Database, Activity, BookOpen } from "lucide-react";
-
+//import chaneges from 'vite-plugin-svgr';
 export default function Home() {
   const [age, setAge] = useState(42);
   const [gender, setGender] = useState("Male");
