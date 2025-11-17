@@ -30,9 +30,9 @@ export default function Home() {
 const renderDataVisualizations = () => {
   if (!generatedData?.data?.preview?.sample_patients) return null;
 
-  // Extract tabular_data from each patient object
   const data = generatedData.data.preview.sample_patients.map(p => p.tabular_data);
   const totalGenerated = generatedData.data.num_generated;
+  const patients = generatedData.data.preview.sample_patients;
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -40,15 +40,12 @@ const renderDataVisualizations = () => {
     <div className="mt-8 space-y-8">
       <h3 className="text-2xl font-bold">Generated Patient Data</h3>
       
-      {/* Note about sample data */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-        <b>Note:</b> Showing {data.length} sample records out of {totalGenerated} total generated records. 
-        Full dataset saved to CSV file.
+        <b>Note:</b> Showing {data.length} sample records out of {totalGenerated} total generated records. Full dataset saved to CSV file.
       </div>
       
-      {/* Full Data Table */}
       <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
-        <h4 className="text-lg font-semibold mb-4">Patient Records ({data.length} of {totalGenerated})</h4>
+        <h4 className="text-lg font-semibold mb-4">Tabular Patient Records</h4>
         <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
           <table className="min-w-full table-auto border-collapse">
             <thead className="sticky top-0 bg-gray-100 z-10">
@@ -93,14 +90,72 @@ const renderDataVisualizations = () => {
             </tbody>
           </table>
         </div>
-        
         <p className="text-sm text-gray-500 mt-4">
           📁 Full dataset saved to: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{generatedData.data.tabular_file}</code>
         </p>
       </div>
+
+      <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
+        <h4 className="text-xl font-bold mb-6">Time Series Data - RBS Values Over Time (All Patients)</h4>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {patients.map((patient, idx) => {
+            if (!patient.timeseries_sample || patient.timeseries_sample.length === 0) return null;
+            
+            const chartData = patient.timeseries_sample.map(point => ({
+              time: point.timestamp.split('T')[1].slice(0, 5),
+              rbs: point.rbs_value
+            }));
+
+            const isDiabetic = patient.tabular_data.diabetes === 1;
+
+            return (
+              <div key={idx} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                <div className="mb-2">
+                  <h5 className="text-sm font-semibold">{patient.patient_id}</h5>
+                  <p className="text-xs text-gray-600">
+                    Age: {patient.tabular_data.age} | 
+                    <span className={isDiabetic ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'}>
+                      {isDiabetic ? ' Diabetic' : ' Non-Diabetic'}
+                    </span>
+                  </p>
+                </div>
+                <ResponsiveContainer width="100%" height={150}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="time" 
+                      tick={{ fontSize: 10 }}
+                      interval={2}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 10 }}
+                      domain={[0, 'auto']}
+                    />
+                    <Tooltip 
+                      contentStyle={{ fontSize: 12 }}
+                      labelFormatter={(value) => `Time: ${value}`}
+                      formatter={(value) => [`${value.toFixed(1)} mg/dL`, 'RBS']}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="rbs" 
+                      stroke={isDiabetic ? '#ef4444' : '#10b981'}
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
+
 
   // API call for generating healthcare data
   const handleGenerate = async () => {
