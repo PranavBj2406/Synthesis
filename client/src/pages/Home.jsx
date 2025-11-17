@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  Loader2,
-  User,
-  Database,
-  Activity,
-  BookOpen,
-  Download,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
-import { PieChart, Pie, BarChart, Bar, LineChart, Line, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-
+import { Loader2, User, Database, Activity, BookOpen } from "lucide-react";
 
 export default function Home() {
   const [recordCount, setRecordCount] = useState(1000);
