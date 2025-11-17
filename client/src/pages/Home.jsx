@@ -13,6 +13,8 @@ import {
 import { PieChart, Pie, BarChart, Bar, LineChart, Line, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
 
+import { Loader2, User, Database, Activity, BookOpen } from "lucide-react";
+//import chaneges from 'vite-plugin-svgr';
 export default function Home() {
   const [recordCount, setRecordCount] = useState(1000);
   const [epochs, setEpochs] = useState(100);
