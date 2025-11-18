@@ -209,39 +209,38 @@ const renderDataVisualizations = () => {
   };
 
   // API call for training model
-  const handleTrain = async () => {
-    setIsTraining(true);
-    setError(null);
-    setTrainingResults(null);
-
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/healthcare-gan/train",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            time_series_path: "cleaned_merged_data.csv",
-            tabular_path: "cleaned_tabular_data.csv",
-            epochs: parseInt(epochs),
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setTrainingResults(data);
-    } catch (err) {
-      setError(`Failed to train model: ${err.message}`);
-    } finally {
-      setIsTraining(false);
+ const handleTrain = async () => {
+  setIsTraining(true);
+  setError(null);
+  setTrainingResults(null);
+  try {
+    const response = await fetch('http://localhost:5000/api/healthcare-gan/train', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        batch_size: parseInt(batchSize),  // ✅ Use batchSize from state
+        epochs: parseInt(epochs),          // ✅ Use epochs from state
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    
+    const data = await response.json();
+    console.log('Training Response:', data);
+    
+    if (data.success) {
+      setTrainingResults(data.data);  // ✅ Set the training results
+    } else {
+      setError(data.error || 'Training failed');
+    }
+  } catch (err) {
+    setError(`Failed to train model: ${err.message}`);
+  } finally {
+    setIsTraining(false);
+  }
+};
 
   // Download generated data as JSON
   const downloadData = () => {
