@@ -58,7 +58,7 @@ class HealthcareGANClient:
         """POST /api/v1/train - Train Models"""
         try:
             response = requests.post(
-                self._get_url("train"), 
+                self._get_url("train/gan"), 
                 json=training_data, 
                 timeout=self.timeout
             )
