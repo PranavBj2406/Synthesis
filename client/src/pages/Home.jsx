@@ -10,23 +10,23 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { 
-  PieChart, 
-  Pie, 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  ScatterChart, 
-  Scatter, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer, 
-  Cell 
-} from 'recharts';
+import {
+  PieChart,
+  Pie,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 
 export default function Home() {
   const [recordCount, setRecordCount] = useState(1000);
@@ -40,137 +40,208 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [diabetesRatio, setDiabetesRatio] = useState(0.5);
   const [hypertensionRatio, setHypertensionRatio] = useState(0.7);
+  const [explanation, setExplanation] = useState("");
+  const [loadingExplanation, setLoadingExplanation] = useState(false);
 
   // Render data visualizations
-const renderDataVisualizations = () => {
-  if (!generatedData?.data?.preview?.sample_patients) return null;
+  const renderDataVisualizations = () => {
+    if (!generatedData?.data?.preview?.sample_patients) return null;
 
-  const data = generatedData.data.preview.sample_patients.map(p => p.tabular_data);
-  const totalGenerated = generatedData.data.num_generated;
-  const patients = generatedData.data.preview.sample_patients;
+    const data = generatedData.data.preview.sample_patients.map(
+      (p) => p.tabular_data,
+    );
+    const totalGenerated = generatedData.data.num_generated;
+    const patients = generatedData.data.preview.sample_patients;
 
-  if (!Array.isArray(data) || data.length === 0) return null;
+    if (!Array.isArray(data) || data.length === 0) return null;
 
-  return (
-    <div className="mt-8 space-y-8">
-      <h3 className="text-2xl font-bold">Generated Patient Data</h3>
-      
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-        <b>Note:</b> Showing {data.length} sample records out of {totalGenerated} total generated records. Full dataset saved to CSV file.
-      </div>
-      
-      <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
-        <h4 className="text-lg font-semibold mb-4">Tabular Patient Records</h4>
-        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
-          <table className="min-w-full table-auto border-collapse">
-            <thead className="sticky top-0 bg-gray-100 z-10">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Patient ID</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Age</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">BMI</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Avg RBS</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">HbA1c</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">BP Reading</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Resp. Rate</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Heart Rate</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">SpO2</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Diabetes</th>
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">Hypertension</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((record, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.patient_id}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.age}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.bmi?.toFixed(1)}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.average_rbs?.toFixed(1)}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.hba1c?.toFixed(2)}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.hypertension}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.respiratory_rate}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.heart_rate}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm">{record.spo2?.toFixed(1)}</td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-center">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${record.diabetes === 1 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-                      {record.diabetes === 1 ? 'Yes' : 'No'}
-                    </span>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-sm text-center">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${record.bp_status === 1 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                      {record.bp_status === 1 ? 'Yes' : 'No'}
-                    </span>
-                  </td>
+    return (
+      <div className="mt-8 space-y-8">
+        <h3 className="text-2xl font-bold">Generated Patient Data</h3>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+          <b>Note:</b> Showing {data.length} sample records out of{" "}
+          {totalGenerated} total generated records. Full dataset saved to CSV
+          file.
+        </div>
+
+        <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
+          <h4 className="text-lg font-semibold mb-4">
+            Tabular Patient Records
+          </h4>
+          <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table className="min-w-full table-auto border-collapse">
+              <thead className="sticky top-0 bg-gray-100 z-10">
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Patient ID
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Age
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    BMI
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Avg RBS
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    HbA1c
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    BP Reading
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Resp. Rate
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Heart Rate
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    SpO2
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Diabetes
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-semibold">
+                    Hypertension
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.map((record, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.patient_id}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.age}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.bmi?.toFixed(1)}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.average_rbs?.toFixed(1)}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.hba1c?.toFixed(2)}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.hypertension}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.respiratory_rate}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.heart_rate}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">
+                      {record.spo2?.toFixed(1)}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm text-center">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${record.diabetes === 1 ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
+                      >
+                        {record.diabetes === 1 ? "Yes" : "No"}
+                      </span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm text-center">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${record.bp_status === 1 ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"}`}
+                      >
+                        {record.bp_status === 1 ? "Yes" : "No"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-gray-500 mt-4">
+            📁 Full dataset saved to:{" "}
+            <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+              {generatedData.data.tabular_file}
+            </code>
+          </p>
         </div>
-        <p className="text-sm text-gray-500 mt-4">
-          📁 Full dataset saved to: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{generatedData.data.tabular_file}</code>
-        </p>
-      </div>
 
-      <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
-        <h4 className="text-xl font-bold mb-6">Time Series Data - RBS Values Over Time (All Patients)</h4>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {patients.map((patient, idx) => {
-            if (!patient.timeseries_sample || patient.timeseries_sample.length === 0) return null;
-            
-            const chartData = patient.timeseries_sample.map(point => ({
-              time: point.timestamp.split('T')[1].slice(0, 5),
-              rbs: point.rbs_value
-            }));
+        <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
+          <h4 className="text-xl font-bold mb-6">
+            Time Series Data - RBS Values Over Time (All Patients)
+          </h4>
 
-            const isDiabetic = patient.tabular_data.diabetes === 1;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {patients.map((patient, idx) => {
+              if (
+                !patient.timeseries_sample ||
+                patient.timeseries_sample.length === 0
+              )
+                return null;
 
-            return (
-              <div key={idx} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                <div className="mb-2">
-                  <h5 className="text-sm font-semibold">{patient.patient_id}</h5>
-                  <p className="text-xs text-gray-600">
-                    Age: {patient.tabular_data.age} | 
-                    <span className={isDiabetic ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'}>
-                      {isDiabetic ? ' Diabetic' : ' Non-Diabetic'}
-                    </span>
-                  </p>
+              const chartData = patient.timeseries_sample.map((point) => ({
+                time: point.timestamp.split("T")[1].slice(0, 5),
+                rbs: point.rbs_value,
+              }));
+
+              const isDiabetic = patient.tabular_data.diabetes === 1;
+
+              return (
+                <div
+                  key={idx}
+                  className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                >
+                  <div className="mb-2">
+                    <h5 className="text-sm font-semibold">
+                      {patient.patient_id}
+                    </h5>
+                    <p className="text-xs text-gray-600">
+                      Age: {patient.tabular_data.age} |
+                      <span
+                        className={
+                          isDiabetic
+                            ? "text-red-600 font-semibold"
+                            : "text-green-600 font-semibold"
+                        }
+                      >
+                        {isDiabetic ? " Diabetic" : " Non-Diabetic"}
+                      </span>
+                    </p>
+                  </div>
+                  <ResponsiveContainer width="100%" height={150}>
+                    <LineChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="time"
+                        tick={{ fontSize: 10 }}
+                        interval={2}
+                      />
+                      <YAxis tick={{ fontSize: 10 }} domain={[0, "auto"]} />
+                      <Tooltip
+                        contentStyle={{ fontSize: 12 }}
+                        labelFormatter={(value) => `Time: ${value}`}
+                        formatter={(value) => [
+                          `${value.toFixed(1)} mg/dL`,
+                          "RBS",
+                        ]}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="rbs"
+                        stroke={isDiabetic ? "#ef4444" : "#10b981"}
+                        strokeWidth={2}
+                        dot={false}
+                        activeDot={{ r: 4 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
-                <ResponsiveContainer width="100%" height={150}>
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="time" 
-                      tick={{ fontSize: 10 }}
-                      interval={2}
-                    />
-                    <YAxis 
-                      tick={{ fontSize: 10 }}
-                      domain={[0, 'auto']}
-                    />
-                    <Tooltip 
-                      contentStyle={{ fontSize: 12 }}
-                      labelFormatter={(value) => `Time: ${value}`}
-                      formatter={(value) => [`${value.toFixed(1)} mg/dL`, 'RBS']}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="rbs" 
-                      stroke={isDiabetic ? '#ef4444' : '#10b981'}
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{ r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
   // API call for generating healthcare data
   const handleGenerate = async () => {
@@ -191,7 +262,7 @@ const renderDataVisualizations = () => {
             diabetes_ratio: parseFloat(diabetesRatio) || 0.5, // FIXED: Use actual API params
             hypertension_ratio: parseFloat(hypertensionRatio) || 0.7, // FIXED: Use actual API params
           }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -199,7 +270,7 @@ const renderDataVisualizations = () => {
       }
 
       const data = await response.json();
-       console.log("API Response:", data);
+      console.log("API Response:", data);
       setGeneratedData(data);
     } catch (err) {
       setError(`Failed to generate data: ${err.message}`);
@@ -208,39 +279,70 @@ const renderDataVisualizations = () => {
     }
   };
 
+  //API call for Fetching explanation for generated data
+  const fetchDatasetExplanation = async () => {
+    if (!generatedData?.data?.preview?.statistics) return;
+
+    setLoadingExplanation(true);
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/healthcare-gan/explain-stats",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(generatedData.data.preview.statistics),
+        },
+      );
+
+      const result = await response.json();
+
+      setExplanation(result.explanation);
+    } catch (error) {
+      console.error("Explanation fetch failed:", error);
+    } finally {
+      setLoadingExplanation(false);
+    }
+  };
+
   // API call for training model
- const handleTrain = async () => {
-  setIsTraining(true);
-  setError(null);
-  setTrainingResults(null);
-  try {
-    const response = await fetch('http://localhost:5000/api/healthcare-gan/train', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        batch_size: parseInt(batchSize),  // ✅ Use batchSize from state
-        epochs: parseInt(epochs),          // ✅ Use epochs from state
-      }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+  const handleTrain = async () => {
+    setIsTraining(true);
+    setError(null);
+    setTrainingResults(null);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/healthcare-gan/train",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            batch_size: parseInt(batchSize), // ✅ Use batchSize from state
+            epochs: parseInt(epochs), // ✅ Use epochs from state
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Training Response:", data);
+
+      if (data.success) {
+        setTrainingResults(data.data); // ✅ Set the training results
+      } else {
+        setError(data.error || "Training failed");
+      }
+    } catch (err) {
+      setError(`Failed to train model: ${err.message}`);
+    } finally {
+      setIsTraining(false);
     }
-    
-    const data = await response.json();
-    console.log('Training Response:', data);
-    
-    if (data.success) {
-      setTrainingResults(data.data);  // ✅ Set the training results
-    } else {
-      setError(data.error || 'Training failed');
-    }
-  } catch (err) {
-    setError(`Failed to train model: ${err.message}`);
-  } finally {
-    setIsTraining(false);
-  }
-};
+  };
 
   // Download generated data as JSON
   const downloadData = () => {
@@ -538,7 +640,9 @@ const renderDataVisualizations = () => {
                           max="1000"
                           step="10"
                           value={recordCount}
-                          onChange={(e) => setRecordCount(Number(e.target.value))}
+                          onChange={(e) =>
+                            setRecordCount(Number(e.target.value))
+                          }
                           className="w-full accent-emerald-600"
                         />
                         {/* Note */}
@@ -574,9 +678,8 @@ const renderDataVisualizations = () => {
               {/* Results Display */}
               {renderDataResults()}
 
-              {/* Result table */ }
+              {/* Result table */}
               {renderDataVisualizations()}
-
             </div>
           )}
 
@@ -665,6 +768,47 @@ const renderDataVisualizations = () => {
 
               {/* Training Results Display */}
               {renderTrainingResults()}
+            </div>
+          )}
+
+
+          {/* About Tab Content with AI Explanation */}
+          {activeTab === "about" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-4">
+                Dataset Insight Summary
+              </h2>
+
+              {!generatedData && (
+                <p className="text-gray-500">
+                  Generate dataset first to view insights.
+                </p>
+              )}
+
+              {generatedData && (
+                <div className="bg-white border border-emerald-200 rounded-xl shadow-md p-6">
+                  <button
+                    onClick={fetchDatasetExplanation}
+                    className="px-4 py-2 bg-emerald-500 text-white rounded-lg mb-4"
+                  >
+                    Explain Dataset Trends (AI)
+                  </button>
+
+                  {loadingExplanation && (
+                    <p className="text-gray-500">
+                      Generating AI explanation...
+                    </p>
+                  )}
+
+                  {explanation && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h3 className="font-semibold mb-2">AI Insight</h3>
+
+                      <p>{explanation}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

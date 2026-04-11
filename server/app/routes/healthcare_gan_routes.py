@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 import uuid
 import logging
-
+import requests
 try:
     from app.ml.client import HealthcareGANClient
 except ImportError:
@@ -191,3 +191,23 @@ def test_integration():
     except Exception as e:
         logger.error(f"Integration test error: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@healthcare_gan_bp.route("/explain-stats", methods=["POST"])
+def explain_stats():
+
+    try:
+        stats = request.get_json()
+
+        response = requests.post(
+            "http://localhost:8001/explain-stats",
+            json=stats
+        )
+
+        return jsonify(response.json()), response.status_code
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500

@@ -79,10 +79,12 @@ import os
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from typing import Dict, Any
 from api.api import router
 import logging
 import traceback
 from config import logger
+from transformer_insight_helper import generate_dataset_insight
 
 # Force UTF-8 encoding for Windows console
 if sys.platform == 'win32':
@@ -148,6 +150,54 @@ async def root():
             "docs": "/docs"
         }
     }
+
+@app.post("/explain-stats")
+async def explain_dataset_stats(stats: Dict[str, Any]):
+    """
+    Generate a natural-language explanation of dataset statistics.
+    
+    Accepts dataset statistics JSON and returns a concise medical-style summary
+    of patterns and trends in the dataset using a transformer model.
+    
+    Args:
+        stats: Dictionary containing dataset statistics such as:
+               - age_range: dict with 'min' and 'max'
+               - bmi_range: dict with 'min' and 'max'
+               - diabetes_distribution: dict with 'diabetic_percentage'
+               - diabetic_rbs_mean: float
+               - non_diabetic_rbs_mean: float
+               - hba1c_range: dict with 'min' and 'max'
+    
+    Returns:
+        JSON with status and natural-language explanation
+    """
+    try:
+        logger.info("Received request to explain dataset statistics")
+        
+        # Generate insight using the transformer model
+        explanation = generate_dataset_insight(stats)
+        
+        logger.info("Dataset statistics explanation generated successfully")
+        
+        return {
+            "status": "success",
+            "explanation": explanation
+        }
+    
+    except ValueError as e:
+        logger.error(f"Invalid statistics provided: {str(e)}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid statistics: {str(e)}"
+        )
+    
+    except Exception as e:
+        logger.error(f"Failed to generate explanation: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate dataset explanation: {str(e)}"
+        )
 
 if __name__ == "__main__":
     uvicorn.run(
