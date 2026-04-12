@@ -5,10 +5,7 @@
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![GAN](https://img.shields.io/badge/GAN-Synthetic%20Data-red?style=for-the-badge)
 ![Transformers](https://img.shields.io/badge/HuggingFace-Transformers-yellow?style=for-the-badge)
-![LangChain](https://img.shields.io/badge/LangChain-AI%20Agent-blue?style=for-the-badge)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-00758F?style=for-the-badge&logo=mysql&logoColor=white)
-![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)
 
 A **production-style multimodal healthcare dataset generation platform** that simulates realistic patient records using **GAN-based synthetic data modeling** and explains dataset characteristics using a **transformer-powered AI insight engine**.
 
