@@ -85,6 +85,7 @@ import logging
 import traceback
 from config import logger
 from transformer_insight_helper import generate_dataset_insight
+import time
 
 # Force UTF-8 encoding for Windows console
 if sys.platform == 'win32':
@@ -153,35 +154,19 @@ async def root():
 
 @app.post("/explain-stats")
 async def explain_dataset_stats(stats: Dict[str, Any]):
-    """
-    Generate a natural-language explanation of dataset statistics.
-    
-    Accepts dataset statistics JSON and returns a concise medical-style summary
-    of patterns and trends in the dataset using a transformer model.
-    
-    Args:
-        stats: Dictionary containing dataset statistics such as:
-               - age_range: dict with 'min' and 'max'
-               - bmi_range: dict with 'min' and 'max'
-               - diabetes_distribution: dict with 'diabetic_percentage'
-               - diabetic_rbs_mean: float
-               - non_diabetic_rbs_mean: float
-               - hba1c_range: dict with 'min' and 'max'
-    
-    Returns:
-        JSON with status and natural-language explanation
-    """
     try:
         logger.info("Received request to explain dataset statistics")
         
-        # Generate insight using the transformer model
+        start = time.time()  # ← start timer
         explanation = generate_dataset_insight(stats)
+        elapsed = round(time.time() - start, 2)  # ← stop timer
         
-        logger.info("Dataset statistics explanation generated successfully")
+        logger.info(f"Dataset statistics explanation generated successfully in {elapsed}s")  # ← log it
         
         return {
             "status": "success",
-            "explanation": explanation
+            "explanation": explanation,
+            "inference_time_seconds": elapsed  # ← optional, helps frontend too
         }
     
     except ValueError as e:
@@ -198,6 +183,7 @@ async def explain_dataset_stats(stats: Dict[str, Any]):
             status_code=500,
             detail=f"Failed to generate dataset explanation: {str(e)}"
         )
+
 
 if __name__ == "__main__":
     uvicorn.run(
