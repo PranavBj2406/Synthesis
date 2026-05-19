@@ -32,7 +32,9 @@ Designed for:
       <img src="https://github.com/user-attachments/assets/de5a5ac6-d4c3-4346-a49c-1ed319f604cc" width="100%" />
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/2de7f21b-ed52-4fc5-b35b-86d10d32d393" width="100%" />
+     <img width="1500" height="803" alt="image" src="https://github.com/user-attachments/assets/94b1d3aa-7e57-438b-86a9-ef87ed1a0509" />
+    </td>
+     <img width="1697" height="819" alt="image" src="https://github.com/user-attachments/assets/511148e2-e63e-4939-ba86-9dce9118be66" />
     </td>
   </tr>
 </table>
