@@ -36,12 +36,6 @@ Designed for:
       <img src="https://github.com/user-attachments/assets/94b1d3aa-7e57-438b-86a9-ef87ed1a0509" width="100%" />
     </td>
   </tr>
-
-  <tr>
-    <td colspan="2" align="center">
-      <img src="https://github.com/user-attachments/assets/511148e2-e63e-4939-ba86-9dce9118be66" width="100%" />
-    </td>
-  </tr>
 </table>
 
 # 🚀 Features
