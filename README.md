@@ -17,6 +17,13 @@ Designed for:
 
 ---
 
+#🖼️ Product Preview 
+<img width="1883" height="906" alt="Screenshot 2026-05-19 233215" src="https://github.com/user-attachments/assets/eb15ba00-c4cd-4bb6-8674-790d55fb967a" />
+<img width="1650" height="695" alt="image" src="https://github.com/user-attachments/assets/74ad5191-5eea-41a1-b13f-f0c0cfe51417" />
+<img width="1070" height="894" alt="image" src="https://github.com/user-attachments/assets/de5a5ac6-d4c3-4346-a49c-1ed319f604cc" />
+<img width="1353" height="821" alt="image" src="https://github.com/user-attachments/assets/2de7f21b-ed52-4fc5-b35b-86d10d32d393" />
+
+
 # 🚀 Features
 
 ## 1️⃣ Synthetic Healthcare Dataset Generation
